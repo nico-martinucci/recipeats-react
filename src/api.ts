@@ -31,8 +31,8 @@ class RecipeatsApi {
 
     // // Individual API routes
 
-    static async getAllRecipes(filter = "") {
-        let res = await this.request("recipes", { filter });
+    static async getAllRecipes(name = "") {
+        let res = await this.request("recipes/");
         return res.recipes;
     }
 
