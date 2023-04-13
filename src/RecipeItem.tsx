@@ -6,7 +6,7 @@ interface Props {
 
 export default function RecipeItem({ item }: Props) {
     return (
-        <li>
+        <li className="RecipeItem">
             {item.amount}
             {item.unit}
             {item.ingredient}

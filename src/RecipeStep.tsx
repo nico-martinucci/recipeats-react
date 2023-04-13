@@ -6,6 +6,6 @@ interface Props {
 
 export default function RecipeItem({ step }: Props) {
     return (
-        <li>{step.description}</li>
+        <li className="RecipeStep">{step.description}</li>
     )
 }
