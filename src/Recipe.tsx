@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import RecipeItem from "./RecipeItem";
 import RecipeStep from "./RecipeStep";
 import RecipeatsApi from "./api";
@@ -41,9 +42,11 @@ export default function Recipe() {
     const [recipe, setRecipe] = useState<IRecipe>();
     const [isLoading, setIsLoading] = useState<Boolean>(true);
 
+    const { recipe_id } = useParams();
+
     useEffect(function () {
         async function getRecipe() {
-            let recipe = await RecipeatsApi.getRecipeById(1);
+            let recipe = await RecipeatsApi.getRecipeById(Number(recipe_id));
             setRecipe(recipe);
             setIsLoading(false);
         }
@@ -56,7 +59,7 @@ export default function Recipe() {
     if (isLoading) return <h1>Loading...</h1>
 
     return (
-        <>
+        <div className="Recipe">
             <h1>{recipe?.name}</h1>
             <h3>{recipe?.description}</h3>
             <ul>
@@ -69,6 +72,6 @@ export default function Recipe() {
                     <RecipeStep key={s.order} step={s} />
                 ))}
             </ol>
-        </>
+        </div>
     )
 }
