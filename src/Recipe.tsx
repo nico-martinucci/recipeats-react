@@ -61,12 +61,12 @@ export default function Recipe() {
             <h3>{recipe?.description}</h3>
             <ul>
                 {recipe?.items.map(i => (
-                    <RecipeItem item={i} />
+                    <RecipeItem key={i.order} item={i} />
                 ))}
             </ul>
             <ol>
                 {recipe?.steps.map(s => (
-                    <RecipeStep step={s} />
+                    <RecipeStep key={s.order} step={s} />
                 ))}
             </ol>
         </>
