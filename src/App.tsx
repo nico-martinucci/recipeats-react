@@ -5,6 +5,7 @@ import './App.css'
 import Recipe from './Recipe'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import RecipesList from './RecipesList'
+import RecipesHome from './RecipesHome'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,7 +14,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/recipes" element={<RecipesList />} />
+          <Route path="/recipes" element={<RecipesHome />} />
           <Route path="/recipes/:recipe_id" element={<Recipe />} />
         </Routes>
       </BrowserRouter>
