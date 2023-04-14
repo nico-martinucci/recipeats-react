@@ -32,7 +32,7 @@ export default function RecipesList() {
     return (
         <div className="Recipes">
             <h1>Recipes</h1>
-            {recipes?.map(r => (<RecipesListItem recipe={r} />))}
+            {recipes?.map(r => (<RecipesListItem key={r.id} recipe={r} />))}
         </div>
     )
 }
