@@ -35,7 +35,7 @@ interface IRecipe {
     items: IRecipeItem[];
     steps: IRecipeStep[];
     notes: IRecipeNote[];
-    private: false;
+    private: boolean;
 }
 
 export default function Recipe() {
