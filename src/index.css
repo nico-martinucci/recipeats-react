@@ -7,6 +7,10 @@
   color: inherit;
 }
 
+.form-input-block {
+  margin: 1rem auto;
+}
+
 .form-input-block>label {
   display: block;
 }

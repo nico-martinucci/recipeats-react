@@ -31,7 +31,8 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
 
     function handleChange(
-        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
+            | HTMLSelectElement>
     ) {
         const { name, value } = evt.target;
         setFormData((fData) => ({
@@ -41,6 +42,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     }
 
     // TODO: write server-side routes/queries to get lists of meal types and recipe types
+    // FIXME: input state handling isn't working - check BYBO for how we did it there
 
     return (
         <div className="RecipeAddForm">
@@ -48,7 +50,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             <form>
                 <h2>Recipe Basics</h2>
                 <div className="form-input-block">
-                    <label>Recipe Name:</label>
+                    <label>Recipe Name</label>
                     <input
                         id="name"
                         name="name"
@@ -57,7 +59,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     />
                 </div>
                 <div className="form-input-block">
-                    <label>Description:</label>
+                    <label>Description</label>
                     <textarea
                         id="description"
                         name="description"
@@ -66,7 +68,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     />
                 </div>
                 <div className="form-input-block">
-                    <label>Meal:</label>
+                    <label>Meal</label>
                     <select
                         id="mealName"
                         name="mealName"
@@ -75,7 +77,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     />
                 </div>
                 <div className="form-input-block">
-                    <label>Recipe Type:</label>
+                    <label>Recipe Type</label>
                     <select
                         id="typeName"
                         name="typeName"
@@ -89,6 +91,16 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                             test 2
                         </option>
                     </select>
+                </div>
+                <div className="form-input-block">
+                    <label>Private Recipe?</label>
+                    <input
+                        id="private"
+                        name="private"
+                        type="checkbox"
+                        checked={formData.private}
+                        onChange={handleChange}
+                    />
                 </div>
             </form>
         </div>
