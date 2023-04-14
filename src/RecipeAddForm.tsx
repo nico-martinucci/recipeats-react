@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
+import RecipeatsApi from "./api";
 
 interface IRecipeEntryData {
     name: string;
@@ -10,6 +11,16 @@ interface IRecipeEntryData {
     items: IRecipeItem[];
     steps: IRecipeStep[];
     notes: IRecipeNote[];
+}
+
+interface IMeals {
+    name: string,
+    description: string
+}
+
+interface ITypes {
+    name: string,
+    description: string
 }
 
 interface Props {
@@ -29,6 +40,35 @@ const initialData = {
 
 export default function RecipeAddForm({ data = initialData }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
+    const [meals, setMeals] = useState<IMeals[]>();
+    const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
+    const [types, setTypes] = useState<ITypes[]>();
+    const [isTypesLoading, setIsTypesLoading] = useState<Boolean>(true);
+
+    useEffect(function () {
+        async function getMealsAndTypes() {
+            try {
+                let meals = await RecipeatsApi.getMeals();
+                setMeals(meals);
+                setIsMealsLoading(false);
+            } catch {
+                return
+            }
+
+            try {
+                let types = await RecipeatsApi.getTypes();
+                setTypes(types);
+                setIsTypesLoading(false);
+            } catch {
+                return
+            }
+        }
+
+        getMealsAndTypes();
+    }, [])
+
+    console.log("meals", meals);
+    console.log("types", types);
 
     function handleChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
@@ -41,7 +81,8 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }));
     }
 
-    // TODO: write server-side routes/queries to get lists of meal types and recipe types
+    if (isMealsLoading || isTypesLoading) return <h1>Loading...</h1>
+
     // FIXME: input state handling isn't working - check BYBO for how we did it there
 
     return (
@@ -74,7 +115,13 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         name="mealName"
                         value={formData.mealName}
                         onChange={handleChange}
-                    />
+                    >
+                        {meals?.map(m => (
+                            <option value={m.name}>
+                                {m.name} - {m.description}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="form-input-block">
                     <label>Recipe Type</label>
@@ -84,12 +131,11 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         value={formData.typeName}
                         onChange={handleChange}
                     >
-                        <option value="test">
-                            test
-                        </option>
-                        <option value="test 2">
-                            test 2
-                        </option>
+                        {types?.map(t => (
+                            <option value={t.name}>
+                                {t.name} - {t.description}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="form-input-block">

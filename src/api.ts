@@ -41,6 +41,16 @@ class RecipeatsApi {
         return res.recipe;
     }
 
+    static async getMeals() {
+        let res = await this.request("meals/");
+        return res.meals;
+    }
+
+    static async getTypes() {
+        let res = await this.request("types/");
+        return res.types;
+    }
+
     // /** Get companies (filtered by name if not undefined) */
 
     // static async getCompanies(nameLike: str) {
