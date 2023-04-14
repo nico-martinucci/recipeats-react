@@ -1,0 +1,11 @@
+.RecipeAddForm-inputBlock {
+    margin: 1rem auto;
+}
+
+.RecipeAddForm-inputLabel {
+    display: block;
+}
+
+.RecipeAddForm-input {
+    width: 50%;
+}

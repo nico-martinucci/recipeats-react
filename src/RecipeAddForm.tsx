@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
+import "./RecipeAddForm.css"
 
 interface IRecipeEntryData {
     name: string;
@@ -83,34 +84,37 @@ export default function RecipeAddForm({ data = initialData }: Props) {
 
     if (isMealsLoading || isTypesLoading) return <h1>Loading...</h1>
 
-    // FIXME: input state handling isn't working - check BYBO for how we did it there
+    // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
 
     return (
         <div className="RecipeAddForm">
             <h1>Add/Edit a Recipe</h1>
             <form>
                 <h2>Recipe Basics</h2>
-                <div className="form-input-block">
-                    <label>Recipe Name</label>
+                <div className="RecipeAddForm-inputBlock">
+                    <label className="RecipeAddForm-inputLabel">Recipe Name</label>
                     <input
+                        className="RecipeAddForm-input"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="form-input-block">
-                    <label>Description</label>
+                <div className="RecipeAddForm-inputBlock">
+                    <label className="RecipeAddForm-inputLabel">Description</label>
                     <textarea
+                        className="RecipeAddForm-input"
                         id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="form-input-block">
-                    <label>Meal</label>
+                <div className="RecipeAddForm-inputBlock">
+                    <label className="RecipeAddForm-inputLabel">Meal</label>
                     <select
+                        className="RecipeAddForm-input"
                         id="mealName"
                         name="mealName"
                         value={formData.mealName}
@@ -123,9 +127,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         ))}
                     </select>
                 </div>
-                <div className="form-input-block">
-                    <label>Recipe Type</label>
+                <div className="RecipeAddForm-inputBlock">
+                    <label className="RecipeAddForm-inputLabel">Recipe Type</label>
                     <select
+                        className="RecipeAddForm-input"
                         id="typeName"
                         name="typeName"
                         value={formData.typeName}
@@ -138,9 +143,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         ))}
                     </select>
                 </div>
-                <div className="form-input-block">
-                    <label>Private Recipe?</label>
+                <div className="RecipeAddForm-inputBlock">
+                    <label className="RecipeAddForm-inputLabel">Private Recipe?</label>
                     <input
+                        className="RecipeAddForm-input"
                         id="private"
                         name="private"
                         type="checkbox"
@@ -148,6 +154,15 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         onChange={handleChange}
                     />
                 </div>
+                <h2>Ingredients</h2>
+                <div style={{ display: "table" }}>
+                    <div style={{ display: "table-cell" }}><input placeholder="amount" /></div>
+                    <div style={{ display: "table-cell" }}><select placeholder="unit"></select></div>
+                    <div style={{ display: "table-cell" }}><input placeholder="ingredient" /></div>
+                    <div style={{ display: "table-cell" }}><input placeholder="description" /></div>
+                </div>
+                <h2>Steps</h2>
+                <h2>Notes</h2>
             </form>
         </div>
     )
