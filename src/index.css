@@ -6,3 +6,13 @@
   text-decoration: none;
   color: inherit;
 }
+
+.form-input-block>label {
+  display: block;
+}
+
+.form-input-block>input,
+textarea,
+select {
+  width: 50%;
+}
