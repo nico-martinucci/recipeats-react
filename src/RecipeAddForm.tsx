@@ -15,14 +15,20 @@ interface IRecipeEntryData {
     notes: IRecipeNote[];
 }
 
-interface IMeals {
-    name: string,
-    description: string
+interface IMeal {
+    name: string;
+    description: string;
 }
 
-interface ITypes {
-    name: string,
-    description: string
+interface IType {
+    name: string;
+    description: string;
+}
+
+interface IUnit {
+    plural: string;
+    short: string;
+    singular: string;
 }
 
 interface Props {
@@ -42,13 +48,15 @@ const initialData = {
 
 export default function RecipeAddForm({ data = initialData }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
-    const [meals, setMeals] = useState<IMeals[]>();
+    const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
-    const [types, setTypes] = useState<ITypes[]>();
+    const [types, setTypes] = useState<IType[]>();
     const [isTypesLoading, setIsTypesLoading] = useState<Boolean>(true);
+    const [units, setUnits] = useState<IUnit[]>();
+    const [isUnitsLoading, setIsUnitsLoading] = useState<Boolean>(true);
 
     useEffect(function () {
-        async function getMealsAndTypes() {
+        async function getFormSelectData() {
             try {
                 let meals = await RecipeatsApi.getMeals();
                 setMeals(meals);
@@ -64,10 +72,20 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             } catch {
                 return
             }
+
+            try {
+                let units = await RecipeatsApi.getUnits();
+                setUnits(units);
+                setIsUnitsLoading(false);
+            } catch {
+                return
+            }
         }
 
-        getMealsAndTypes();
+        getFormSelectData();
     }, [])
+
+    console.log("types", types)
 
     function handleChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
@@ -178,7 +196,11 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         </div>
                         <div className="RecipeAddForm-ingredientUnit">
                             <select placeholder="unit">
-
+                                {units?.map(u => (
+                                    <option value={u.short} key={u.short}>
+                                        {`${u.short} (${u.plural})`}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className="RecipeAddForm-ingredientName">

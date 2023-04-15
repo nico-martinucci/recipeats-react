@@ -51,6 +51,11 @@ class RecipeatsApi {
         return res.types;
     }
 
+    static async getUnits() {
+        let res = await this.request("units/");
+        return res.units;
+    }
+
     // /** Get companies (filtered by name if not undefined) */
 
     // static async getCompanies(nameLike: str) {
