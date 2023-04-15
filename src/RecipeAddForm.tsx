@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
 import "./RecipeAddForm.css"
+import _ from "lodash"
 
 interface IRecipeEntryData {
     name: string;
@@ -68,9 +69,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         getMealsAndTypes();
     }, [])
 
-    console.log("meals", meals);
-    console.log("types", types);
-
     function handleChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
             | HTMLSelectElement>
@@ -80,6 +78,24 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             ...fData,
             [name]: value,
         }));
+    }
+
+    function onAddIngredientClick(evt: React.MouseEvent) {
+        evt.preventDefault();
+        setFormData(curr => ({
+            ...curr,
+            items: [
+                ...curr.items,
+                {
+                    amount: null,
+                    description: "",
+                    id: null,
+                    ingredient: "",
+                    order: null,
+                    unit: null
+                }
+            ]
+        }))
     }
 
     if (isMealsLoading || isTypesLoading) return <h1>Loading...</h1>
@@ -121,7 +137,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         onChange={handleChange}
                     >
                         {meals?.map(m => (
-                            <option value={m.name}>
+                            <option value={m.name} key={_.uniqueId()}>
                                 {m.name} - {m.description}
                             </option>
                         ))}
@@ -137,7 +153,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                         onChange={handleChange}
                     >
                         {types?.map(t => (
-                            <option value={t.name}>
+                            <option value={t.name} key={_.uniqueId()}>
                                 {t.name} - {t.description}
                             </option>
                         ))}
@@ -155,12 +171,26 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     />
                 </div>
                 <h2>Ingredients</h2>
-                <div style={{ display: "table" }}>
-                    <div style={{ display: "table-cell" }}><input placeholder="amount" /></div>
-                    <div style={{ display: "table-cell" }}><select placeholder="unit"></select></div>
-                    <div style={{ display: "table-cell" }}><input placeholder="ingredient" /></div>
-                    <div style={{ display: "table-cell" }}><input placeholder="description" /></div>
-                </div>
+                {formData.items.map(i => (
+                    <div className="RecipeAddForm-ingredient" key={_.uniqueId()}>
+                        <div className="RecipeAddForm-ingredientAmount">
+                            <input placeholder="amount" />
+                        </div>
+                        <div className="RecipeAddForm-ingredientUnit">
+                            <select placeholder="unit">
+
+                            </select>
+                        </div>
+                        <div className="RecipeAddForm-ingredientName">
+                            <input placeholder="ingredient" />
+                        </div>
+                        ,
+                        <div className="RecipeAddForm-ingredientDescription">
+                            <input placeholder="description" />
+                        </div>
+                    </div>
+                ))}
+                <button onClick={onAddIngredientClick}>Add ingredient</button>
                 <h2>Steps</h2>
                 <h2>Notes</h2>
             </form>

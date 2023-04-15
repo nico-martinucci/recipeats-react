@@ -9,3 +9,20 @@
 .RecipeAddForm-input {
     width: 50%;
 }
+
+.RecipeAddForm-ingredient {
+    display: table;
+    border-spacing: .5rem;
+}
+
+.RecipeAddForm-ingredient>div {
+    display: table-cell;
+}
+
+.RecipeAddForm-ingredientAmount {}
+
+.RecipeAddForm-ingredientUnit {}
+
+.RecipeAddForm-ingredientName {}
+
+.RecipeAddForm-ingredientDescription {}

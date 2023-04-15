@@ -5,11 +5,11 @@ import RecipeatsApi from "./api";
 import { useState, useEffect } from "react";
 
 export interface IRecipeItem {
-    amount: number;
-    description: string | null;
-    id: number;
+    amount: number | null;
+    description: string;
+    id: number | null;
     ingredient: string;
-    order: number;
+    order: number | null;
     unit: string | null;
 }
 
