@@ -85,7 +85,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         getFormSelectData();
     }, [])
 
-    console.log("types", types)
+    // console.log("types", types)
 
     function handleChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
@@ -97,6 +97,34 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             [name]: value,
         }));
     }
+
+    function handleNestedChange(
+        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
+            | HTMLSelectElement>
+    ) {
+        const { value, id } = evt.target;
+        const [list, data, idx] = id.split("-");
+        console.log("list", list);
+        console.log("idx", idx);
+        console.log("data", data);
+        console.log("value", value);
+        setFormData((fData) => ({
+            ...fData,
+            // @ts-ignore FIXME: this works but throws a weird error...
+            [list]: fData[list].map((
+                x: (IRecipeItem | IRecipeStep | IRecipeNote),
+                i: number
+            ) => {
+                if (i !== +idx) return x
+                return {
+                    ...x,
+                    [data]: value
+                }
+            })
+        }))
+    }
+
+    console.log("form data", formData);
 
     function onAddIngredientClick(evt: React.MouseEvent) {
         evt.preventDefault();
@@ -116,7 +144,9 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }))
     }
 
-    if (isMealsLoading || isTypesLoading) return <h1>Loading...</h1>
+    if (isMealsLoading || isTypesLoading || isUnitsLoading) {
+        return <h1>Loading...</h1>
+    }
 
     // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
 
@@ -189,13 +219,26 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     />
                 </div>
                 <h2>Ingredients</h2>
-                {formData.items.map(i => (
-                    <div className="RecipeAddForm-ingredient" key={_.uniqueId()}>
+                {formData.items.map((i, idx) => (
+                    <div className="RecipeAddForm-ingredient" key={idx}>
                         <div className="RecipeAddForm-ingredientAmount">
-                            <input placeholder="amount" />
+                            <input
+                                id={`items-amount-${idx}`}
+                                placeholder="amount"
+                                value={i.amount?.toString()}
+                                onChange={handleNestedChange}
+                            />
                         </div>
                         <div className="RecipeAddForm-ingredientUnit">
-                            <select placeholder="unit">
+                            <select
+                                id={`items-unit-${idx}`}
+                                placeholder="unit"
+                                value={i.unit?.toString()}
+                                onChange={handleNestedChange}
+                            >
+                                <option value="-" key={"-"}>
+                                    -
+                                </option>
                                 {units?.map(u => (
                                     <option value={u.short} key={u.short}>
                                         {`${u.short} (${u.plural})`}
@@ -204,16 +247,31 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                             </select>
                         </div>
                         <div className="RecipeAddForm-ingredientName">
-                            <input placeholder="ingredient" />
+                            <input
+                                id={`items-ingredient-${idx}`}
+                                placeholder="ingredient"
+                                value={i.ingredient?.toString()}
+                                onChange={handleNestedChange}
+                            />
                         </div>
                         ,
                         <div className="RecipeAddForm-ingredientDescription">
-                            <input placeholder="description" />
+                            <input
+                                id={`items-description-${idx}`}
+                                placeholder="description"
+                                value={i.description?.toString()}
+                                onChange={handleNestedChange}
+                            />
                         </div>
                     </div>
                 ))}
                 <button onClick={onAddIngredientClick}>Add ingredient</button>
                 <h2>Steps</h2>
+                {formData.steps.map(s => (
+                    <textarea>
+                        { }
+                    </textarea>
+                ))}
                 <h2>Notes</h2>
             </form>
         </div>
