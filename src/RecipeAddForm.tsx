@@ -104,10 +104,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     ) {
         const { value, id } = evt.target;
         const [list, data, idx] = id.split("-");
-        console.log("list", list);
-        console.log("idx", idx);
-        console.log("data", data);
-        console.log("value", value);
+
         setFormData((fData) => ({
             ...fData,
             // @ts-ignore FIXME: this works but throws a weird error...
@@ -118,7 +115,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 if (i !== +idx) return x
                 return {
                     ...x,
-                    [data]: value
+                    [data]: data === "amount" ? +value : value
                 }
             })
         }))
@@ -133,7 +130,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             items: [
                 ...curr.items,
                 {
-                    amount: null,
+                    amount: 0,
                     description: "",
                     id: null,
                     ingredient: "",
@@ -267,7 +264,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 ))}
                 <button onClick={onAddIngredientClick}>Add ingredient</button>
                 <h2>Steps</h2>
-                {formData.steps.map(s => (
+                {formData.steps.map((s, idx) => (
                     <textarea>
                         { }
                     </textarea>
