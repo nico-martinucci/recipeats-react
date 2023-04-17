@@ -3,6 +3,11 @@ import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
 import "./RecipeAddForm.css"
 import _ from "lodash"
+import {
+    TextField, FormControl, InputLabel, Select, MenuItem, Menu, FormGroup,
+    FormControlLabel, Checkbox, Autocomplete
+} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material"
 
 interface IRecipeEntryData {
     name: string;
@@ -88,9 +93,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     // console.log("types", types)
 
     function handleChange(
-        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
-            | HTMLSelectElement>
+        evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
+            HTMLTextAreaElement>)
     ) {
+        console.log("event target", evt.target);
         const { name, value } = evt.target;
         setFormData((fData) => ({
             ...fData,
@@ -99,11 +105,12 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     }
 
     function handleNestedChange(
-        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement
-            | HTMLSelectElement>
+        evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
+            HTMLTextAreaElement>)
     ) {
-        const { value, id } = evt.target;
-        const [list, data, idx] = id.split("-");
+        console.log("event target", evt.target);
+        const { value, name } = evt.target;
+        const [list, data, idx] = name.split("-");
 
         setFormData((fData) => ({
             ...fData,
@@ -135,7 +142,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     id: null,
                     ingredient: "",
                     order: null,
-                    unit: null
+                    unit: ""
                 }
             ]
         }))
@@ -145,116 +152,141 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         return <h1>Loading...</h1>
     }
 
+    const testOptions = [
+        { id: 1, label: "test 1" },
+        { id: 2, label: "test 2" },
+        { id: 3, label: "test 3" },
+    ]
+
     // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
 
     return (
-        <div className="RecipeAddForm">
+        <div>
             <h1>Add/Edit a Recipe</h1>
             <form>
                 <h2>Recipe Basics</h2>
-                <div className="RecipeAddForm-inputBlock">
-                    <label className="RecipeAddForm-inputLabel">Recipe Name</label>
-                    <input
-                        className="RecipeAddForm-input"
+                <div>
+                    <TextField
+                        label="Recipe Name"
+                        variant="standard"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="RecipeAddForm-inputBlock">
-                    <label className="RecipeAddForm-inputLabel">Description</label>
-                    <textarea
-                        className="RecipeAddForm-input"
+                <div>
+                    <TextField
+                        label="Description"
+                        variant="standard"
+                        multiline
                         id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                     />
                 </div>
-                <div className="RecipeAddForm-inputBlock">
-                    <label className="RecipeAddForm-inputLabel">Meal</label>
-                    <select
-                        className="RecipeAddForm-input"
-                        id="mealName"
-                        name="mealName"
-                        value={formData.mealName}
-                        onChange={handleChange}
-                    >
-                        {meals?.map(m => (
-                            <option value={m.name} key={_.uniqueId()}>
-                                {m.name} - {m.description}
-                            </option>
-                        ))}
-                    </select>
+                <div>
+                    <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                        <InputLabel id="meal-select-label">Meal</InputLabel>
+                        <Select
+                            labelId="meal-select-label"
+                            id="mealName"
+                            name="mealName"
+                            defaultValue=""
+                            value={formData.mealName}
+                            onChange={handleChange}
+                        >
+                            <MenuItem></MenuItem>
+                            {meals?.map(m => (
+                                <MenuItem value={m.name} key={_.uniqueId()}>
+                                    {m.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </div>
-                <div className="RecipeAddForm-inputBlock">
-                    <label className="RecipeAddForm-inputLabel">Recipe Type</label>
-                    <select
-                        className="RecipeAddForm-input"
-                        id="typeName"
-                        name="typeName"
-                        value={formData.typeName}
-                        onChange={handleChange}
-                    >
-                        {types?.map(t => (
-                            <option value={t.name} key={_.uniqueId()}>
-                                {t.name} - {t.description}
-                            </option>
-                        ))}
-                    </select>
+                <div>
+                    <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                        <InputLabel id="type-select-label">Type</InputLabel>
+                        <Select
+                            labelId="type-select-label"
+                            id="typeName"
+                            name="typeName"
+                            defaultValue=""
+                            value={formData.typeName}
+                            onChange={handleChange}
+                        >
+                            {types?.map(t => (
+                                <MenuItem value={t.name} key={_.uniqueId()}>
+                                    {t.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </div>
-                <div className="RecipeAddForm-inputBlock">
-                    <label className="RecipeAddForm-inputLabel">Private Recipe?</label>
-                    <input
-                        className="RecipeAddForm-input"
+                <div>
+                    <FormControlLabel control={<Checkbox
                         id="private"
                         name="private"
-                        type="checkbox"
                         checked={formData.private}
                         onChange={handleChange}
-                    />
+                    />} label="Private Recipe?" />
                 </div>
                 <h2>Ingredients</h2>
                 {formData.items.map((i, idx) => (
-                    <div className="RecipeAddForm-ingredient" key={idx}>
-                        <div className="RecipeAddForm-ingredientAmount">
-                            <input
-                                id={`items-amount-${idx}`}
+                    <div key={idx}>
+                        <div>
+                            <TextField
+                                label="Amount"
+                                variant="standard"
+                                name={`items-amount-${idx}`}
                                 placeholder="amount"
                                 value={i.amount?.toString()}
                                 onChange={handleNestedChange}
                             />
                         </div>
-                        <div className="RecipeAddForm-ingredientUnit">
-                            <select
-                                id={`items-unit-${idx}`}
-                                placeholder="unit"
-                                value={i.unit?.toString()}
-                                onChange={handleNestedChange}
-                            >
-                                <option value="-" key={"-"}>
-                                    -
-                                </option>
-                                {units?.map(u => (
-                                    <option value={u.short} key={u.short}>
-                                        {`${u.short} (${u.plural})`}
-                                    </option>
-                                ))}
-                            </select>
+                        <div>
+                            <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                                <InputLabel id="item-unit-label">Unit</InputLabel>
+                                <Select
+                                    labelId="item-unit-label"
+                                    name={`items-unit-${idx}`}
+                                    defaultValue=""
+                                    value={i.unit?.toString()}
+                                    onChange={handleNestedChange}
+                                >
+                                    {units?.map(u => (
+                                        <MenuItem value={u.short} key={u.short}>
+                                            {`${u.short} (${u.plural})`}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </div>
-                        <div className="RecipeAddForm-ingredientName">
-                            <input
-                                id={`items-ingredient-${idx}`}
+                        <div>
+                            <Autocomplete
+                                disablePortal
+                                sx={{ width: 300 }}
+                                options={testOptions}
                                 placeholder="ingredient"
-                                value={i.ingredient?.toString()}
-                                onChange={handleNestedChange}
+                                renderInput={(params) => <TextField
+                                    {...params}
+                                    name={`items-ingredient-${idx}`}
+                                    size="small"
+                                    label="Ingredient"
+                                    variant="standard"
+                                    value={{ label: i.ingredient?.toString() }}
+                                    onChange={handleNestedChange}
+                                />}
                             />
                         </div>
                         ,
-                        <div className="RecipeAddForm-ingredientDescription">
-                            <input
-                                id={`items-description-${idx}`}
+                        <div>
+                            <TextField
+                                label="Description"
+                                variant="standard"
+                                name={`items-description-${idx}`}
                                 placeholder="description"
                                 value={i.description?.toString()}
                                 onChange={handleNestedChange}
