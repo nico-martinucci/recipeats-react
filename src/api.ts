@@ -41,6 +41,11 @@ class RecipeatsApi {
         return res.recipe;
     }
 
+    static async getAllIngredients(name = "") {
+        let res = await this.request("ingredients/");
+        return res.ingredients;
+    }
+
     static async getMeals() {
         let res = await this.request("meals/");
         return res.meals;
