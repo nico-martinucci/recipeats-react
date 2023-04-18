@@ -36,6 +36,12 @@ interface IUnit {
     singular: string;
 }
 
+interface IIngredient {
+    category: string;
+    description: string;
+    name: string;
+}
+
 interface Props {
     data?: IRecipeEntryData;
 }
@@ -57,8 +63,12 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
     const [types, setTypes] = useState<IType[]>();
     const [isTypesLoading, setIsTypesLoading] = useState<Boolean>(true);
-    const [units, setUnits] = useState<IUnit[]>();
+    const [units, setUnits] = useState<IUnit[]>([{ plural: "", short: "", singular: "" }]);
     const [isUnitsLoading, setIsUnitsLoading] = useState<Boolean>(true);
+    const [ingredients, setIngredients] = useState<IIngredient[]>(
+        [{ category: "", description: "", name: "" }]
+    );
+    const [isIngredientsLoading, setIsIngredientsLoading] = useState<Boolean>(true);
 
     useEffect(function () {
         async function getFormSelectData() {
@@ -85,6 +95,14 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             } catch {
                 return
             }
+
+            try {
+                let ingredients = await RecipeatsApi.getAllIngredients();
+                setIngredients(ingredients);
+                setIsIngredientsLoading(false);
+            } catch {
+                return
+            }
         }
 
         getFormSelectData();
@@ -104,13 +122,35 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }));
     }
 
-    function handleNestedChange(
-        evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
-            HTMLTextAreaElement>)
-    ) {
-        console.log("event target", evt.target);
-        const { value, name } = evt.target;
-        const [list, data, idx] = name.split("-");
+    function handleAutocompleteChange(evt, value) {
+
+        const [list, data, idx, propName] = evt.target.id.split("-");
+
+        setFormData((fData) => {
+
+            console.log("fData inside setter", fData);
+            return {
+                ...fData,
+                // @ts-ignore FIXME: this works but throws a weird error...
+                [list]: fData[list].map((
+                    x: (IRecipeItem | IRecipeStep | IRecipeNote),
+                    i: number
+                ) => {
+                    if (i !== +idx) return x
+                    return {
+                        ...x,
+                        [data]: value ? value[propName] : ""
+                    }
+                })
+            }
+        }
+        )
+    }
+
+    function handleNestedChange(evt) {
+
+        const { value, id } = evt.target;
+        const [list, data, idx] = id.split("-");
 
         setFormData((fData) => ({
             ...fData,
@@ -128,7 +168,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }))
     }
 
-    console.log("form data", formData);
+    console.log("form data (after update)", formData);
 
     function onAddIngredientClick(evt: React.MouseEvent) {
         evt.preventDefault();
@@ -153,9 +193,9 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     }
 
     const testOptions = [
-        { id: 1, label: "test 1" },
-        { id: 2, label: "test 2" },
-        { id: 3, label: "test 3" },
+        { id: 1, name: "test 1" },
+        { id: 2, name: "test 2" },
+        { id: 3, name: "test 3" },
     ]
 
     // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
@@ -240,53 +280,59 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                             <TextField
                                 label="Amount"
                                 variant="standard"
-                                name={`items-amount-${idx}`}
+                                id={`items-amount-${idx}`}
                                 placeholder="amount"
                                 value={i.amount?.toString()}
                                 onChange={handleNestedChange}
                             />
                         </div>
                         <div>
-                            <FormControl variant="standard" sx={{ minWidth: 200 }}>
-                                <InputLabel id="item-unit-label">Unit</InputLabel>
-                                <Select
-                                    labelId="item-unit-label"
-                                    name={`items-unit-${idx}`}
-                                    defaultValue=""
-                                    value={i.unit?.toString()}
-                                    onChange={handleNestedChange}
-                                >
-                                    {units?.map(u => (
-                                        <MenuItem value={u.short} key={u.short}>
-                                            {`${u.short} (${u.plural})`}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <Autocomplete
+                                disablePortal
+                                autoComplete
+                                autoHighlight
+                                autoSelect
+                                disableClearable
+                                sx={{ width: 300 }}
+                                options={units}
+                                getOptionLabel={u => `${u.short} (${u.plural})`}
+                                id={`items-unit-${idx}-short`}
+                                onChange={handleAutocompleteChange}
+                                renderInput={(params) => <TextField
+                                    {...params}
+                                    size="small"
+                                    label="Unit"
+                                    variant="standard"
+                                    value={{ label: i.unit?.toString() }}
+                                />}
+                            />
                         </div>
                         <div>
                             <Autocomplete
                                 disablePortal
+                                autoComplete
+                                autoHighlight
+                                autoSelect
+                                disableClearable
                                 sx={{ width: 300 }}
-                                options={testOptions}
-                                placeholder="ingredient"
+                                options={ingredients}
+                                getOptionLabel={i => i.name}
+                                id={`items-ingredient-${idx}-name`}
+                                onChange={handleAutocompleteChange}
                                 renderInput={(params) => <TextField
                                     {...params}
-                                    name={`items-ingredient-${idx}`}
                                     size="small"
                                     label="Ingredient"
                                     variant="standard"
                                     value={{ label: i.ingredient?.toString() }}
-                                    onChange={handleNestedChange}
                                 />}
                             />
                         </div>
-                        ,
                         <div>
                             <TextField
                                 label="Description"
                                 variant="standard"
-                                name={`items-description-${idx}`}
+                                id={`items-description-${idx}`}
                                 placeholder="description"
                                 value={i.description?.toString()}
                                 onChange={handleNestedChange}

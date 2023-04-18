@@ -3,7 +3,7 @@ import RecipesList from "./RecipesList"
 import RecipeAddForm from "./RecipeAddForm"
 
 export default function RecipesHome() {
-    const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(false);
+    const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(true);
 
     function showAddRecipeForm() {
         setIsAddingRecipe(true);
