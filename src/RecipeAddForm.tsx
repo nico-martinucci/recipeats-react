@@ -5,9 +5,13 @@ import "./RecipeAddForm.css"
 import _ from "lodash"
 import {
     TextField, FormControl, InputLabel, Select, MenuItem, Menu, FormGroup,
-    FormControlLabel, Checkbox, Autocomplete, Stack, Button
+    FormControlLabel, Checkbox, Autocomplete, Stack, Button, Grid
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material"
+import { IconButton } from "@mui/material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { number } from "prop-types";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
 interface IRecipeEntryData {
     name: string;
@@ -116,8 +120,8 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     ) {
         console.log("event target", evt.target);
         const { name, value } = evt.target;
-        setFormData((fData) => ({
-            ...fData,
+        setFormData((curr) => ({
+            ...curr,
             [name]: value,
         }));
     }
@@ -126,13 +130,13 @@ export default function RecipeAddForm({ data = initialData }: Props) {
 
         const [list, data, idx, propName] = evt.target.id.split("-");
 
-        setFormData((fData) => {
+        setFormData((curr) => {
 
-            console.log("fData inside setter", fData);
+            console.log("curr inside setter", curr);
             return {
-                ...fData,
+                ...curr,
                 // @ts-ignore FIXME: this works but throws a weird error...
-                [list]: fData[list].map((
+                [list]: curr[list].map((
                     x: (IRecipeItem | IRecipeStep | IRecipeNote),
                     i: number
                 ) => {
@@ -152,10 +156,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         const { value, id } = evt.target;
         const [list, data, idx] = id.split("-");
 
-        setFormData((fData) => ({
-            ...fData,
+        setFormData((curr) => ({
+            ...curr,
             // @ts-ignore FIXME: this works but throws a weird error...
-            [list]: fData[list].map((
+            [list]: curr[list].map((
                 x: (IRecipeItem | IRecipeStep | IRecipeNote),
                 i: number
             ) => {
@@ -182,7 +186,8 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     id: null,
                     ingredient: "",
                     order: null,
-                    unit: ""
+                    unit: "",
+                    key: _.uniqueId(),
                 }
             ]
         }))
@@ -198,6 +203,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     description: "",
                     id: null,
                     order: null,
+                    key: _.uniqueId(),
                 }
             ]
         }))
@@ -213,12 +219,26 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     id: null,
                     note: "",
                     timeStamp: "",
+                    key: _.uniqueId(),
                 }
             ]
         }))
     }
 
-    if (isMealsLoading || isTypesLoading || isUnitsLoading) {
+    function deleteDynamicFormItem(evt) {
+        console.log("target", evt.currentTarget);
+        const { id } = evt.currentTarget;
+        const [list, key] = id.split("-")
+        setFormData(curr => ({
+            ...curr,
+            // @ts-ignore FIXME: this works but throws a weird error...
+            [list]: curr[list].filter(i => i.key !== key)
+        }))
+    }
+
+    if (isMealsLoading || isTypesLoading ||
+        isUnitsLoading || isIngredientsLoading
+    ) {
         return <h1>Loading...</h1>
     }
 
@@ -312,23 +332,23 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     <h2>Ingredients</h2>
                     <Stack gap={1} sx={{ mb: 4 }}>
                         {formData.items.map((i, idx) => (
-                            <div key={idx}>
-                                <Stack direction="row" gap={2}>
-                                    <div>
+                            <Stack direction="row" key={i.key}>
+                                <Grid2 container spacing={2} xs>
+                                    <Grid2 xs={12} sm={2}>
                                         <TextField
                                             // sx={{ maxWidth: "30%" }}
                                             label="Amount"
                                             variant="standard"
+                                            fullWidth
                                             id={`items-amount-${idx}`}
                                             placeholder="amount"
                                             value={i.amount}
                                             onChange={handleNestedChange}
                                             size="small"
                                         />
-                                    </div>
-                                    <div>
+                                    </Grid2>
+                                    <Grid2 xs={12} sm={2}>
                                         <Autocomplete
-                                            sx={{ minWidth: "300px" }}
                                             disablePortal
                                             // autoComplete
                                             // autoHighlight
@@ -346,42 +366,48 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                                 value={{ label: i.unit?.toString() }}
                                             />}
                                         />
-                                    </div>
-                                </Stack>
-                                <div>
-                                    <Autocomplete
-                                        sx={{ width: "100%" }}
-                                        disablePortal
-                                        autoComplete
-                                        autoHighlight
-                                        autoSelect
-                                        disableClearable
-                                        options={ingredients}
-                                        getOptionLabel={i => i.name}
-                                        id={`items-ingredient-${idx}-name`}
-                                        onChange={handleAutocompleteChange}
-                                        renderInput={(params) => <TextField
-                                            {...params}
-                                            size="small"
-                                            label="Ingredient"
+                                    </Grid2>
+                                    <Grid2 xs={12} sm={4}>
+                                        <Autocomplete
+                                            disablePortal
+                                            // autoComplete
+                                            // autoHighlight
+                                            // autoSelect
+                                            disableClearable
+                                            options={ingredients}
+                                            getOptionLabel={i => i.name}
+                                            id={`items-ingredient-${idx}-name`}
+                                            onChange={handleAutocompleteChange}
+                                            renderInput={(params) => <TextField
+                                                {...params}
+                                                size="small"
+                                                label="Ingredient"
+                                                variant="standard"
+                                                value={{ label: i.ingredient?.toString() }}
+                                            />}
+                                        />
+                                    </Grid2>
+                                    <Grid2 xs={12} sm={4}>
+                                        <TextField
+                                            label="Description"
                                             variant="standard"
-                                            value={{ label: i.ingredient?.toString() }}
-                                        />}
-                                    />
-                                </div>
-                                <div>
-                                    <TextField
-                                        sx={{ minWidth: "100%" }}
-                                        label="Description"
-                                        variant="standard"
-                                        id={`items-description-${idx}`}
-                                        placeholder="description"
-                                        value={i.description?.toString()}
-                                        onChange={handleNestedChange}
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
+                                            fullWidth
+                                            id={`items-description-${idx}`}
+                                            placeholder="description"
+                                            value={i.description?.toString()}
+                                            onChange={handleNestedChange}
+                                            size="small"
+                                        />
+                                    </Grid2>
+                                </Grid2>
+                                <IconButton
+                                    id={`items-${i.key}`}
+                                    color="primary"
+                                    onClick={deleteDynamicFormItem}
+                                >
+                                    <HighlightOffIcon />
+                                </IconButton>
+                            </Stack>
                         ))}
                     </Stack>
                     <Button variant="contained" onClick={onAddIngredientClick}>Add ingredient</Button>
@@ -390,16 +416,24 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     <h2>Steps</h2>
                     <Stack gap={1} sx={{ mb: 4 }}>
                         {formData.steps.map((s, idx) => (
-                            <TextField
-                                key={idx}
-                                sx={{ minWidth: "100%" }}
-                                label={`Step ${idx + 1}`}
-                                variant="standard"
-                                multiline
-                                id={`steps-description-${idx}`}
-                                value={s.description}
-                                onChange={handleNestedChange}
-                            />
+                            <Stack direction="row" key={s.key}>
+                                <TextField
+                                    sx={{ minWidth: "90%" }}
+                                    label={`Step ${idx + 1}`}
+                                    variant="standard"
+                                    multiline
+                                    id={`steps-description-${idx}`}
+                                    value={s.description}
+                                    onChange={handleNestedChange}
+                                />
+                                <IconButton
+                                    id={`steps-${s.key}`}
+                                    color="primary"
+                                    onClick={deleteDynamicFormItem}
+                                >
+                                    <HighlightOffIcon />
+                                </IconButton>
+                            </Stack>
                         ))}
                     </Stack>
                     <Button variant="contained" onClick={onAddStepClick}>Add step</Button>
@@ -408,21 +442,30 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                     <h2>Notes</h2>
                     <Stack gap={1} sx={{ mb: 4 }}>
                         {formData.notes.map((n, idx) => (
-                            <TextField
-                                key={idx}
-                                sx={{ minWidth: "100%" }}
-                                label={`Note`}
-                                variant="standard"
-                                multiline
-                                id={`notes-note-${idx}`}
-                                value={n.note}
-                                onChange={handleNestedChange}
-                            />
+                            <Stack direction="row" key={n.key}>
+                                <TextField
+                                    key={n.key}
+                                    sx={{ minWidth: "90%" }}
+                                    label={`Note`}
+                                    variant="standard"
+                                    multiline
+                                    id={`notes-note-${idx}`}
+                                    value={n.note}
+                                    onChange={handleNestedChange}
+                                />
+                                <IconButton
+                                    id={`notes-${n.key}`}
+                                    color="primary"
+                                    onClick={deleteDynamicFormItem}
+                                >
+                                    <HighlightOffIcon />
+                                </IconButton>
+                            </Stack>
                         ))}
                     </Stack>
                     <Button variant="contained" onClick={onAddNoteClick}>Add note</Button>
                 </div>
-            </form>
+            </form >
         </div >
     )
 }

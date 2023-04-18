@@ -11,18 +11,21 @@ export interface IRecipeItem {
     ingredient: string;
     order: number | null;
     unit: string | null;
+    key: string;
 }
 
 export interface IRecipeStep {
     description: string | null;
     id: number | null;
     order: number | null;
+    key: string;
 }
 
 export interface IRecipeNote {
     id: number | null;
     note: string | null;
     timeStamp: string | null;
+    key: string;
 }
 
 interface IRecipe {
