@@ -5,7 +5,7 @@ import RecipeatsApi from "./api";
 import { useState, useEffect } from "react";
 
 export interface IRecipeItem {
-    amount: string | null;
+    amount: string | number | null;
     description: string;
     id: number | null;
     ingredient: string;
@@ -28,11 +28,11 @@ export interface IRecipeNote {
     key: string;
 }
 
-interface IRecipe {
+export interface IRecipe {
     name: string;
     description: string;
-    createdBy: string;
-    id: number;
+    createdBy?: string;
+    id?: number;
     mealName: string;
     typeName: string;
     items: IRecipeItem[];

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IRecipe } from "./Recipe"
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -13,7 +14,7 @@ class RecipeatsApi {
         const url = `${BASE_URL}/${endpoint}`;
         const headers = {
             ...addlHeaders,
-            Authorization: `Bearer ${RecipeatsApi.token}`
+            Authorization: `${RecipeatsApi.token}`
         };
         const params = (method === "get")
             ? data
@@ -38,6 +39,11 @@ class RecipeatsApi {
 
     static async getRecipeById(id: number) {
         let res = await this.request(`recipes/${id}`);
+        return res.recipe;
+    }
+
+    static async addNewRecipe(recipe: IRecipe) {
+        let res = await this.request("recipes/", recipe, "post");
         return res.recipe;
     }
 

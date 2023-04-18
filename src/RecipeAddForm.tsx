@@ -12,6 +12,7 @@ import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { number } from "prop-types";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
 
 interface IRecipeEntryData {
     name: string;
@@ -51,13 +52,30 @@ interface Props {
 }
 
 const initialData = {
-    name: "",
-    description: "",
-    mealName: "",
-    typeName: "",
+    name: "test name",
+    description: "test description",
+    mealName: "breakfast",
+    typeName: "main dish",
     private: false,
-    items: [],
-    steps: [],
+    items: [
+        {
+            amount: "1",
+            description: "cooked and cleaned",
+            id: null,
+            ingredient: "crab",
+            order: null,
+            unit: "lb",
+            key: _.uniqueId(),
+        }
+    ],
+    steps: [
+        {
+            description: "just eat it",
+            id: null,
+            order: null,
+            key: _.uniqueId(),
+        }
+    ],
     notes: []
 }
 
@@ -231,6 +249,14 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }))
     }
 
+    async function addNewRecipe(evt: React.MouseEvent) {
+        evt.preventDefault();
+        adjustRecipeForSubmit(formData);
+        console.log("formData afer changes", formData);
+        let newRecipe = await RecipeatsApi.addNewRecipe(formData);
+        console.log("IT WORKED", newRecipe);
+    }
+
     if (isMealsLoading || isTypesLoading ||
         isUnitsLoading || isIngredientsLoading
     ) {
@@ -330,7 +356,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                             variant="standard"
                                             fullWidth
                                             id={`items-amount-${idx}`}
-                                            placeholder="amount"
                                             value={i.amount}
                                             onChange={handleNestedChange}
                                             size="small"
@@ -382,7 +407,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                             variant="standard"
                                             fullWidth
                                             id={`items-description-${idx}`}
-                                            placeholder="description"
                                             value={i.description?.toString()}
                                             onChange={handleNestedChange}
                                             size="small"
@@ -393,13 +417,14 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                     id={`items-${i.key}`}
                                     color="primary"
                                     onClick={deleteDynamicFormItem}
+                                    tabIndex={-1}
                                 >
                                     <HighlightOffIcon />
                                 </IconButton>
                             </Stack>
                         ))}
                     </Stack>
-                    <Button variant="contained" onClick={onAddIngredientClick}>Add ingredient</Button>
+                    <Button variant="outlined" onClick={onAddIngredientClick}>Add ingredient</Button>
                 </div>
                 <div>
                     <h2>Steps</h2>
@@ -419,13 +444,14 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                     id={`steps-${s.key}`}
                                     color="primary"
                                     onClick={deleteDynamicFormItem}
+                                    tabIndex={-1}
                                 >
                                     <HighlightOffIcon />
                                 </IconButton>
                             </Stack>
                         ))}
                     </Stack>
-                    <Button variant="contained" onClick={onAddStepClick}>Add step</Button>
+                    <Button variant="outlined" onClick={onAddStepClick}>Add step</Button>
                 </div>
                 <div>
                     <h2>Notes</h2>
@@ -446,14 +472,22 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                     id={`notes-${n.key}`}
                                     color="primary"
                                     onClick={deleteDynamicFormItem}
+                                    tabIndex={-1}
                                 >
                                     <HighlightOffIcon />
                                 </IconButton>
                             </Stack>
                         ))}
                     </Stack>
-                    <Button variant="contained" onClick={onAddNoteClick}>Add note</Button>
+                    <Button variant="outlined" onClick={onAddNoteClick}>Add note</Button>
                 </div>
+                <Button
+                    variant="contained"
+                    sx={{ mt: 4 }}
+                    onClick={addNewRecipe}
+                >
+                    Submit recipe
+                </Button>
             </form >
         </div >
     )
