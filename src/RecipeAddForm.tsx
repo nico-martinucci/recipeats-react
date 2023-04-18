@@ -118,41 +118,38 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
             HTMLTextAreaElement>)
     ) {
-        console.log("event target", evt.target);
         const { name, value } = evt.target;
+
         setFormData((curr) => ({
             ...curr,
             [name]: value,
         }));
     }
 
-    function handleAutocompleteChange(evt, value) {
-
+    // @ts-ignore
+    function handleAutocompleteChange(evt, value: (IUnit | IIngredient)) {
         const [list, data, idx, propName] = evt.target.id.split("-");
 
-        setFormData((curr) => {
-
-            console.log("curr inside setter", curr);
-            return {
-                ...curr,
-                // @ts-ignore FIXME: this works but throws a weird error...
-                [list]: curr[list].map((
-                    x: (IRecipeItem | IRecipeStep | IRecipeNote),
-                    i: number
-                ) => {
-                    if (i !== +idx) return x
-                    return {
-                        ...x,
-                        [data]: value ? value[propName] : ""
-                    }
-                })
-            }
-        }
-        )
+        setFormData((curr) => ({
+            ...curr,
+            // @ts-ignore FIXME: this works but throws a weird error...
+            [list]: curr[list].map((
+                x: (IRecipeItem | IRecipeStep | IRecipeNote),
+                i: number
+            ) => {
+                if (i !== +idx) return x
+                return {
+                    ...x,
+                    // @ts-ignore
+                    [data]: value ? value[propName] : ""
+                }
+            })
+        }));
     }
 
-    function handleNestedChange(evt) {
-
+    function handleNestedChange(
+        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) {
         const { value, id } = evt.target;
         const [list, data, idx] = id.split("-");
 
@@ -171,8 +168,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             })
         }))
     }
-
-    console.log("form data (after update)", formData);
 
     function onAddIngredientClick(evt: React.MouseEvent) {
         evt.preventDefault();
@@ -225,7 +220,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }))
     }
 
-    function deleteDynamicFormItem(evt) {
+    function deleteDynamicFormItem(evt: React.MouseEvent) {
         console.log("target", evt.currentTarget);
         const { id } = evt.currentTarget;
         const [list, key] = id.split("-")
@@ -241,12 +236,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     ) {
         return <h1>Loading...</h1>
     }
-
-    const testOptions = [
-        { id: 1, name: "test 1" },
-        { id: 2, name: "test 2" },
-        { id: 3, name: "test 3" },
-    ]
 
     // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
 
