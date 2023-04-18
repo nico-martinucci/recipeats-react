@@ -1,6 +1,7 @@
 import { useState } from "react"
 import RecipesList from "./RecipesList"
 import RecipeAddForm from "./RecipeAddForm"
+import { Container } from "@mui/material";
 
 export default function RecipesHome() {
     const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(true);
@@ -11,17 +12,19 @@ export default function RecipesHome() {
 
     return (
         <div className="RecipesHome">
-            {!isAddingRecipe &&
-                <>
-                    <button onClick={showAddRecipeForm}>Add a recipe</button>
-                    <RecipesList />
-                </>
-            }
-            {isAddingRecipe &&
-                <>
-                    <RecipeAddForm />
-                </>
-            }
+            <Container>
+                {!isAddingRecipe &&
+                    <>
+                        <button onClick={showAddRecipeForm}>Add a recipe</button>
+                        <RecipesList />
+                    </>
+                }
+                {isAddingRecipe &&
+                    <>
+                        <RecipeAddForm />
+                    </>
+                }
+            </Container>
         </div>
     )
 }
