@@ -144,6 +144,17 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }));
     }
 
+    function handleCheckboxChange(evt: React.ChangeEvent<HTMLInputElement>) {
+        const { name, checked } = evt.target;
+
+        console.log("name", name, "checked", checked);
+
+        setFormData(curr => ({
+            ...curr,
+            [name]: checked === true
+        }))
+    }
+
     // @ts-ignore
     function handleAutocompleteChange(evt, value: (IUnit | IIngredient)) {
         const [list, data, idx, propName] = evt.target.id.split("-");
@@ -338,7 +349,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                                 id="private"
                                 name="private"
                                 checked={formData.private}
-                                onChange={handleChange}
+                                onChange={handleCheckboxChange}
                             />} label="Private Recipe?" />
                         </div>
                     </Stack>
