@@ -162,7 +162,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 if (i !== +idx) return x
                 return {
                     ...x,
-                    [data]: data === "amount" ? +value : value
+                    [data]: value
                 }
             })
         }))
@@ -177,12 +177,42 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             items: [
                 ...curr.items,
                 {
-                    amount: null,
+                    amount: "",
                     description: "",
                     id: null,
                     ingredient: "",
                     order: null,
                     unit: ""
+                }
+            ]
+        }))
+    }
+
+    function onAddStepClick(evt: React.MouseEvent) {
+        evt.preventDefault();
+        setFormData(curr => ({
+            ...curr,
+            steps: [
+                ...curr.steps,
+                {
+                    description: "",
+                    id: null,
+                    order: null,
+                }
+            ]
+        }))
+    }
+
+    function onAddNoteClick(evt: React.MouseEvent) {
+        evt.preventDefault();
+        setFormData(curr => ({
+            ...curr,
+            notes: [
+                ...curr.notes,
+                {
+                    id: null,
+                    note: "",
+                    timeStamp: "",
                 }
             ]
         }))
@@ -204,161 +234,194 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         <div>
             <h1>Add/Edit a Recipe</h1>
             <form>
-                <h2>Recipe Basics</h2>
-                <Stack gap={1} sx={{ mb: 4 }}>
-                    <div>
-                        <TextField
-                            sx={{ minWidth: "100%" }}
-                            label="Recipe Name"
-                            variant="standard"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            sx={{ minWidth: "100%" }}
-                            label="Description"
-                            variant="standard"
-                            multiline
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                            <InputLabel id="meal-select-label">Meal</InputLabel>
-                            <Select
-                                labelId="meal-select-label"
-                                id="mealName"
-                                name="mealName"
-                                defaultValue=""
-                                value={formData.mealName}
+                <div>
+                    <h2>Recipe Basics</h2>
+                    <Stack gap={1} sx={{ mb: 4 }}>
+                        <div>
+                            <TextField
+                                sx={{ minWidth: "100%" }}
+                                label="Recipe Name"
+                                variant="standard"
+                                id="name"
+                                name="name"
+                                value={formData.name}
                                 onChange={handleChange}
-                            >
-                                {meals?.map(m => (
-                                    <MenuItem value={m.name} key={_.uniqueId()}>
-                                        {m.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div>
-                        <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                            <InputLabel id="type-select-label">Type</InputLabel>
-                            <Select
-                                labelId="type-select-label"
-                                id="typeName"
-                                name="typeName"
-                                defaultValue=""
-                                value={formData.typeName}
+                            />
+                        </div>
+                        <div>
+                            <TextField
+                                sx={{ minWidth: "100%" }}
+                                label="Description"
+                                variant="standard"
+                                multiline
+                                id="description"
+                                name="description"
+                                value={formData.description}
                                 onChange={handleChange}
-                            >
-                                {types?.map(t => (
-                                    <MenuItem value={t.name} key={_.uniqueId()}>
-                                        {t.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div>
-                        <FormControlLabel control={<Checkbox
-                            id="private"
-                            name="private"
-                            checked={formData.private}
-                            onChange={handleChange}
-                        />} label="Private Recipe?" />
-                    </div>
-                </Stack>
-                <h2>Ingredients</h2>
-                {formData.items.map((i, idx) => (
-                    <div key={idx}>
-                        <Stack gap={1} sx={{ mb: 4 }}>
-                            <Stack direction="row" gap={2}>
-                                <div>
-                                    <TextField
-                                        // sx={{ maxWidth: "30%" }}
-                                        label="Amount"
-                                        variant="standard"
-                                        id={`items-amount-${idx}`}
-                                        placeholder="amount"
-                                        value={i.amount?.toString()}
-                                        onChange={handleNestedChange}
-                                        size="small"
-                                    />
-                                </div>
+                            />
+                        </div>
+                        <div>
+                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="meal-select-label">Meal</InputLabel>
+                                <Select
+                                    labelId="meal-select-label"
+                                    id="mealName"
+                                    name="mealName"
+                                    defaultValue=""
+                                    value={formData.mealName}
+                                    onChange={handleChange}
+                                >
+                                    {meals?.map(m => (
+                                        <MenuItem value={m.name} key={_.uniqueId()}>
+                                            {m.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div>
+                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="type-select-label">Type</InputLabel>
+                                <Select
+                                    labelId="type-select-label"
+                                    id="typeName"
+                                    name="typeName"
+                                    defaultValue=""
+                                    value={formData.typeName}
+                                    onChange={handleChange}
+                                >
+                                    {types?.map(t => (
+                                        <MenuItem value={t.name} key={_.uniqueId()}>
+                                            {t.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div>
+                            <FormControlLabel control={<Checkbox
+                                id="private"
+                                name="private"
+                                checked={formData.private}
+                                onChange={handleChange}
+                            />} label="Private Recipe?" />
+                        </div>
+                    </Stack>
+                </div>
+                <div>
+                    <h2>Ingredients</h2>
+                    <Stack gap={1} sx={{ mb: 4 }}>
+                        {formData.items.map((i, idx) => (
+                            <div key={idx}>
+                                <Stack direction="row" gap={2}>
+                                    <div>
+                                        <TextField
+                                            // sx={{ maxWidth: "30%" }}
+                                            label="Amount"
+                                            variant="standard"
+                                            id={`items-amount-${idx}`}
+                                            placeholder="amount"
+                                            value={i.amount}
+                                            onChange={handleNestedChange}
+                                            size="small"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Autocomplete
+                                            sx={{ minWidth: "300px" }}
+                                            disablePortal
+                                            // autoComplete
+                                            // autoHighlight
+                                            // autoSelect
+                                            disableClearable
+                                            options={units}
+                                            getOptionLabel={u => `${u.short} (${u.plural})`}
+                                            id={`items-unit-${idx}-short`}
+                                            onChange={handleAutocompleteChange}
+                                            renderInput={(params) => <TextField
+                                                {...params}
+                                                size="small"
+                                                label="Unit"
+                                                variant="standard"
+                                                value={{ label: i.unit?.toString() }}
+                                            />}
+                                        />
+                                    </div>
+                                </Stack>
                                 <div>
                                     <Autocomplete
-                                        sx={{ minWidth: "300px" }}
+                                        sx={{ width: "100%" }}
                                         disablePortal
-                                        // autoComplete
-                                        // autoHighlight
-                                        // autoSelect
+                                        autoComplete
+                                        autoHighlight
+                                        autoSelect
                                         disableClearable
-                                        options={units}
-                                        getOptionLabel={u => `${u.short} (${u.plural})`}
-                                        id={`items-unit-${idx}-short`}
+                                        options={ingredients}
+                                        getOptionLabel={i => i.name}
+                                        id={`items-ingredient-${idx}-name`}
                                         onChange={handleAutocompleteChange}
                                         renderInput={(params) => <TextField
                                             {...params}
                                             size="small"
-                                            label="Unit"
+                                            label="Ingredient"
                                             variant="standard"
-                                            value={{ label: i.unit?.toString() }}
+                                            value={{ label: i.ingredient?.toString() }}
                                         />}
                                     />
                                 </div>
-                            </Stack>
-                            <div>
-                                <Autocomplete
-                                    sx={{ width: "100%" }}
-                                    disablePortal
-                                    autoComplete
-                                    autoHighlight
-                                    autoSelect
-                                    disableClearable
-                                    options={ingredients}
-                                    getOptionLabel={i => i.name}
-                                    id={`items-ingredient-${idx}-name`}
-                                    onChange={handleAutocompleteChange}
-                                    renderInput={(params) => <TextField
-                                        {...params}
-                                        size="small"
-                                        label="Ingredient"
+                                <div>
+                                    <TextField
+                                        sx={{ minWidth: "100%" }}
+                                        label="Description"
                                         variant="standard"
-                                        value={{ label: i.ingredient?.toString() }}
-                                    />}
-                                />
+                                        id={`items-description-${idx}`}
+                                        placeholder="description"
+                                        value={i.description?.toString()}
+                                        onChange={handleNestedChange}
+                                        size="small"
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <TextField
-                                    sx={{ minWidth: "100%" }}
-                                    label="Description"
-                                    variant="standard"
-                                    id={`items-description-${idx}`}
-                                    placeholder="description"
-                                    value={i.description?.toString()}
-                                    onChange={handleNestedChange}
-                                    size="small"
-                                />
-                            </div>
-                        </Stack>
-                    </div>
-                ))}
-                <Button variant="contained" onClick={onAddIngredientClick}>Add ingredient</Button>
-                <h2>Steps</h2>
-                {formData.steps.map((s, idx) => (
-                    <textarea>
-                        { }
-                    </textarea>
-                ))}
-                <h2>Notes</h2>
+                        ))}
+                    </Stack>
+                    <Button variant="contained" onClick={onAddIngredientClick}>Add ingredient</Button>
+                </div>
+                <div>
+                    <h2>Steps</h2>
+                    <Stack gap={1} sx={{ mb: 4 }}>
+                        {formData.steps.map((s, idx) => (
+                            <TextField
+                                key={idx}
+                                sx={{ minWidth: "100%" }}
+                                label={`Step ${idx + 1}`}
+                                variant="standard"
+                                multiline
+                                id={`steps-description-${idx}`}
+                                value={s.description}
+                                onChange={handleNestedChange}
+                            />
+                        ))}
+                    </Stack>
+                    <Button variant="contained" onClick={onAddStepClick}>Add step</Button>
+                </div>
+                <div>
+                    <h2>Notes</h2>
+                    <Stack gap={1} sx={{ mb: 4 }}>
+                        {formData.notes.map((n, idx) => (
+                            <TextField
+                                key={idx}
+                                sx={{ minWidth: "100%" }}
+                                label={`Note`}
+                                variant="standard"
+                                multiline
+                                id={`notes-note-${idx}`}
+                                value={n.note}
+                                onChange={handleNestedChange}
+                            />
+                        ))}
+                    </Stack>
+                    <Button variant="contained" onClick={onAddNoteClick}>Add note</Button>
+                </div>
             </form>
         </div >
     )
