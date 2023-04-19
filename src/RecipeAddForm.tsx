@@ -10,7 +10,6 @@ import {
 import { SelectChangeEvent } from "@mui/material"
 import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { number } from "prop-types";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
 
@@ -242,7 +241,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 {
                     id: null,
                     note: "",
-                    timeStamp: "",
                     key: _.uniqueId(),
                 }
             ]
@@ -265,6 +263,21 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         adjustRecipeForSubmit(formData);
         console.log("formData afer changes", formData);
         let newRecipe = await RecipeatsApi.addNewRecipe(formData);
+
+        let notePromises = [];
+        for (let note of formData.notes) {
+            notePromises.push(RecipeatsApi.addNoteToRecipe(
+                {
+                    ...note,
+                    username: "test"
+                },
+                newRecipe.id
+            ))
+        }
+
+        let notes = await Promise.allSettled(notePromises);
+        newRecipe.notes = [...notes]
+
         console.log("IT WORKED", newRecipe);
     }
 
