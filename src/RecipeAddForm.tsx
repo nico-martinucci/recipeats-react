@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
 import "./RecipeAddForm.css"
@@ -12,6 +13,7 @@ import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
+import { Navigate } from "react-router-dom";
 
 interface IRecipeEntryData {
     name: string;
@@ -90,6 +92,8 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         [{ category: "", description: "", name: "" }]
     );
     const [isIngredientsLoading, setIsIngredientsLoading] = useState<Boolean>(true);
+
+    const navigate = useNavigate();
 
     useEffect(function () {
         async function getFormSelectData() {
@@ -261,10 +265,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     async function addNewRecipe(evt: React.MouseEvent) {
         evt.preventDefault();
         adjustRecipeForSubmit(formData);
-        console.log("formData afer changes", formData);
-        let newRecipe = await RecipeatsApi.addNewRecipe(formData);
 
+        let newRecipe = await RecipeatsApi.addNewRecipe(formData);
         let notePromises = [];
+
         for (let note of formData.notes) {
             notePromises.push(RecipeatsApi.addNoteToRecipe(
                 {
@@ -275,10 +279,10 @@ export default function RecipeAddForm({ data = initialData }: Props) {
             ))
         }
 
-        let notes = await Promise.allSettled(notePromises);
-        newRecipe.notes = [...notes]
-
+        await Promise.allSettled(notePromises);
         console.log("IT WORKED", newRecipe);
+
+        navigate(`/recipes/${newRecipe.id}`);
     }
 
     if (isMealsLoading || isTypesLoading ||
