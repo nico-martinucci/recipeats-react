@@ -5,12 +5,14 @@ interface Props {
 }
 
 export default function RecipeItem({ item }: Props) {
+    let itemText = item.amount
+    itemText = item.unit ? (itemText + " " + item.unit) : itemText
+    itemText = item.ingredient ? (itemText + " " + item.ingredient) : itemText
+    itemText = item.description ? (itemText + ", " + item.description) : itemText
+
     return (
         <li className="RecipeItem">
-            {item.amount}
-            {item.unit}
-            {item.ingredient}
-            {item.description}
+            {itemText}
         </li>
     )
 }
