@@ -34,36 +34,53 @@ class RecipeatsApi {
 
     static async getAllRecipes(name = "") {
         let res = await this.request("recipes/");
+
         return res.recipes;
     }
 
     static async getRecipeById(id: number) {
         let res = await this.request(`recipes/${id}`);
+
         return res.recipe;
     }
 
     static async addNewRecipe(recipe: IRecipe) {
         let res = await this.request("recipes/", recipe, "post");
+
         return res.recipe;
+    }
+
+    static async addNoteToRecipe(noteData: string, recipeId: number) {
+        let res = await this.request(
+            `recipes/${recipeId}/notes`,
+            noteData,
+            "post"
+        )
+
+        return res.note;
     }
 
     static async getAllIngredients(name = "") {
         let res = await this.request("ingredients/");
+
         return res.ingredients;
     }
 
     static async getMeals() {
         let res = await this.request("meals/");
+
         return res.meals;
     }
 
     static async getTypes() {
         let res = await this.request("types/");
+
         return res.types;
     }
 
     static async getUnits() {
         let res = await this.request("units/");
+
         return res.units;
     }
 
