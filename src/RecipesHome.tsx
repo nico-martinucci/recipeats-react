@@ -1,13 +1,36 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import RecipesList from "./RecipesList"
 import RecipeAddForm from "./RecipeAddForm"
+import RecipeSearch from "./RecipeSearch"
 import { Container } from "@mui/material";
+import { Button } from "@mui/material";
+import { IRecipeSummary } from "./RecipesList";
+import RecipeatsApi from "./api";
 
 export default function RecipesHome() {
-    const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(true);
+    const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [recipes, setRecipes] = useState<IRecipeSummary[]>();
+    const [isLoading, setIsLoading] = useState<Boolean>(true);
+
+    useEffect(function () {
+        async function getRecipes() {
+            let recipes = await RecipeatsApi.getAllRecipes(searchTerm);
+            setRecipes(recipes);
+            setIsLoading(false);
+        }
+
+        getRecipes();
+    }, [searchTerm])
+
+    console.log("searchTerm", searchTerm)
 
     function showAddRecipeForm() {
         setIsAddingRecipe(true);
+    }
+
+    function changeSearchTerm(evt: React.ChangeEvent<HTMLInputElement>) {
+        setSearchTerm(evt.target.value);
     }
 
     return (
@@ -15,8 +38,9 @@ export default function RecipesHome() {
             <Container>
                 {!isAddingRecipe &&
                     <>
-                        <button onClick={showAddRecipeForm}>Add a recipe</button>
-                        <RecipesList />
+                        <Button variant="contained" onClick={showAddRecipeForm}>Add a recipe</Button>
+                        <RecipeSearch searchTerm={searchTerm} changeSearchTerm={changeSearchTerm} />
+                        <RecipesList recipes={recipes} isLoading={isLoading} />
                     </>
                 }
                 {isAddingRecipe &&

@@ -13,19 +13,12 @@ export interface IRecipeSummary {
     typeName: string;
 }
 
-export default function RecipesList() {
-    const [recipes, setRecipes] = useState<IRecipeSummary[]>();
-    const [isLoading, setIsLoading] = useState<Boolean>(true);
+interface Props {
+    recipes: IRecipeSummary[] | undefined;
+    isLoading: Boolean;
+}
 
-    useEffect(function () {
-        async function getRecipes() {
-            let recipes = await RecipeatsApi.getAllRecipes();
-            setRecipes(recipes);
-            setIsLoading(false);
-        }
-
-        getRecipes();
-    }, [])
+export default function RecipesList({ recipes, isLoading }: Props) {
 
     if (isLoading) return <h1>Loading...</h1>
 
