@@ -24,7 +24,7 @@ export interface IRecipeStep {
 export interface IRecipeNote {
     id: number | null;
     note: string | null;
-    timeStamp: string | null;
+    username?: string | null;
     key: string;
 }
 
