@@ -33,7 +33,7 @@ class RecipeatsApi {
     // // Individual API routes
 
     static async getAllRecipes(name = "") {
-        let res = await this.request("recipes/");
+        let res = await this.request("recipes/", { name });
 
         return res.recipes;
     }
