@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IRecipe } from "./Recipe"
+import { IRecipe, IRecipeNote } from "./Recipe"
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -50,7 +50,7 @@ class RecipeatsApi {
         return res.recipe;
     }
 
-    static async addNoteToRecipe(noteData: string, recipeId: number) {
+    static async addNoteToRecipe(noteData: IRecipeNote, recipeId: number) {
         let res = await this.request(
             `recipes/${recipeId}/notes`,
             noteData,
