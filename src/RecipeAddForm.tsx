@@ -5,15 +5,14 @@ import RecipeatsApi from "./api";
 import "./RecipeAddForm.css"
 import _ from "lodash"
 import {
-    TextField, FormControl, InputLabel, Select, MenuItem, Menu, FormGroup,
-    FormControlLabel, Checkbox, Autocomplete, Stack, Button, Grid
+    TextField, FormControl, InputLabel, Select, MenuItem,
+    FormControlLabel, Checkbox, Autocomplete, Stack, Button
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material"
 import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
-import { Navigate } from "react-router-dom";
 
 interface IRecipeEntryData {
     name: string;
@@ -133,8 +132,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         getFormSelectData();
     }, [])
 
-    // console.log("types", types)
-
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
             HTMLTextAreaElement>)
@@ -149,8 +146,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
 
     function handleCheckboxChange(evt: React.ChangeEvent<HTMLInputElement>) {
         const { name, checked } = evt.target;
-
-        console.log("name", name, "checked", checked);
 
         setFormData(curr => ({
             ...curr,
@@ -252,7 +247,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
     }
 
     function deleteDynamicFormItem(evt: React.MouseEvent) {
-        console.log("target", evt.currentTarget);
         const { id } = evt.currentTarget;
         const [list, key] = id.split("-")
         setFormData(curr => ({
@@ -280,7 +274,6 @@ export default function RecipeAddForm({ data = initialData }: Props) {
         }
 
         await Promise.allSettled(notePromises);
-        console.log("IT WORKED", newRecipe);
 
         navigate(`/recipes/${newRecipe.id}`);
     }
