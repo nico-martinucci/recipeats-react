@@ -49,6 +49,7 @@ interface IIngredient {
 
 interface Props {
     data?: IRecipeEntryData;
+    toggleFormOff: () => void;
 }
 
 const initialData = {
@@ -62,7 +63,7 @@ const initialData = {
     notes: []
 }
 
-export default function RecipeAddForm({ data = initialData }: Props) {
+export default function RecipeAddForm({ data = initialData, toggleFormOff }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
@@ -271,6 +272,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
 
     return (
         <div>
+            <Button onClick={toggleFormOff}>Cancel</Button>
             <Typography variant="h1">Add/Edit a Recipe</Typography>
             <form>
                 <Typography variant="h2">Recipe Basics</Typography>
@@ -308,7 +310,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                             onChange={handleChange}
                         >
                             {meals?.map(m => (
-                                <MenuItem value={m.name} key={_.uniqueId()}>
+                                <MenuItem value={m.name} key={m.name}>
                                     {m.name}
                                 </MenuItem>
                             ))}
@@ -326,7 +328,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                             onChange={handleChange}
                         >
                             {types?.map(t => (
-                                <MenuItem value={t.name} key={_.uniqueId()}>
+                                <MenuItem value={t.name} key={t.name}>
                                     {t.name}
                                 </MenuItem>
                             ))}
@@ -343,7 +345,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 <Typography variant="h2">Ingredients</Typography>
                 <Stack gap={1} sx={{ mb: 4 }}>
                     {formData.items.map((i, idx) => (
-                        <Stack direction="row" key={i.key}>
+                        <Stack direction="row" key={i.key || i.id}>
                             <Grid2 container spacing={2} xs>
                                 <Grid2 xs={12} sm={2}>
                                     <TextField
@@ -424,7 +426,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 <Typography variant="h2">Steps</Typography>
                 <Stack gap={1} sx={{ mb: 4 }}>
                     {formData.steps.map((s, idx) => (
-                        <Stack direction="row" key={s.key}>
+                        <Stack direction="row" key={s.key || s.id}>
                             <TextField
                                 sx={{ minWidth: "90%" }}
                                 label={`Step ${idx + 1}`}
@@ -449,7 +451,7 @@ export default function RecipeAddForm({ data = initialData }: Props) {
                 <Typography variant="h2">Notes</Typography>
                 <Stack gap={1} sx={{ mb: 4 }}>
                     {formData.notes.map((n, idx) => (
-                        <Stack direction="row" key={n.key}>
+                        <Stack direction="row" key={n.key || n.id}>
                             <TextField
                                 key={n.key}
                                 sx={{ minWidth: "90%" }}
