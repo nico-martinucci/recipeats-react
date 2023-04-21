@@ -6,7 +6,7 @@ import "./RecipeAddForm.css"
 import _ from "lodash"
 import {
     TextField, FormControl, InputLabel, Select, MenuItem,
-    FormControlLabel, Checkbox, Autocomplete, Stack, Button
+    FormControlLabel, Checkbox, Autocomplete, Stack, Button, Typography
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material"
 import { IconButton } from "@mui/material";
@@ -52,30 +52,13 @@ interface Props {
 }
 
 const initialData = {
-    name: "test name",
-    description: "test description",
-    mealName: "breakfast",
-    typeName: "main dish",
+    name: "",
+    description: "",
+    mealName: "",
+    typeName: "",
     private: false,
-    items: [
-        {
-            amount: "1",
-            description: "cooked and cleaned",
-            id: null,
-            ingredient: "crab",
-            order: null,
-            unit: "lb",
-            key: _.uniqueId(),
-        }
-    ],
-    steps: [
-        {
-            description: "just eat it",
-            id: null,
-            order: null,
-            key: _.uniqueId(),
-        }
-    ],
+    items: [],
+    steps: [],
     notes: []
 }
 
@@ -288,227 +271,216 @@ export default function RecipeAddForm({ data = initialData }: Props) {
 
     return (
         <div>
-            <h1>Add/Edit a Recipe</h1>
+            <Typography variant="h1">Add/Edit a Recipe</Typography>
             <form>
-                <div>
-                    <h2>Recipe Basics</h2>
-                    <Stack gap={1} sx={{ mb: 4 }}>
-                        <div>
+                <Typography variant="h2">Recipe Basics</Typography>
+                <Stack gap={2} sx={{ mb: 4 }}>
+
+                    <TextField
+                        sx={{ minWidth: "100%" }}
+                        label="Recipe Name"
+                        variant="standard"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                    />
+
+                    <TextField
+                        sx={{ minWidth: "100%" }}
+                        label="Description"
+                        variant="standard"
+                        multiline
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                    />
+
+                    <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                        <InputLabel id="meal-select-label">Meal</InputLabel>
+                        <Select
+                            labelId="meal-select-label"
+                            id="mealName"
+                            name="mealName"
+                            defaultValue=""
+                            value={formData.mealName}
+                            onChange={handleChange}
+                        >
+                            {meals?.map(m => (
+                                <MenuItem value={m.name} key={_.uniqueId()}>
+                                    {m.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                        <InputLabel id="type-select-label">Type</InputLabel>
+                        <Select
+                            labelId="type-select-label"
+                            id="typeName"
+                            name="typeName"
+                            defaultValue=""
+                            value={formData.typeName}
+                            onChange={handleChange}
+                        >
+                            {types?.map(t => (
+                                <MenuItem value={t.name} key={_.uniqueId()}>
+                                    {t.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControlLabel control={<Checkbox
+                        id="private"
+                        name="private"
+                        checked={formData.private}
+                        onChange={handleCheckboxChange}
+                    />} label="Private Recipe?" />
+                </Stack>
+                <Typography variant="h2">Ingredients</Typography>
+                <Stack gap={1} sx={{ mb: 4 }}>
+                    {formData.items.map((i, idx) => (
+                        <Stack direction="row" key={i.key}>
+                            <Grid2 container spacing={2} xs>
+                                <Grid2 xs={12} sm={2}>
+                                    <TextField
+                                        // sx={{ maxWidth: "30%" }}
+                                        label="Amount"
+                                        variant="standard"
+                                        fullWidth
+                                        id={`items-amount-${idx}`}
+                                        value={i.amount}
+                                        onChange={handleNestedChange}
+                                        size="small"
+                                    />
+                                </Grid2>
+                                <Grid2 xs={12} sm={2}>
+                                    <Autocomplete
+                                        disablePortal
+                                        // autoComplete
+                                        // autoHighlight
+                                        // autoSelect
+                                        disableClearable
+                                        options={units}
+                                        getOptionLabel={u => `${u.short} (${u.plural})`}
+                                        id={`items-unit-${idx}-short`}
+                                        onChange={handleAutocompleteChange}
+                                        renderInput={(params) => <TextField
+                                            {...params}
+                                            size="small"
+                                            label="Unit"
+                                            variant="standard"
+                                            value={{ label: i.unit?.toString() }}
+                                        />}
+                                    />
+                                </Grid2>
+                                <Grid2 xs={12} sm={4}>
+                                    <Autocomplete
+                                        disablePortal
+                                        // autoComplete
+                                        // autoHighlight
+                                        // autoSelect
+                                        disableClearable
+                                        options={ingredients}
+                                        getOptionLabel={i => i.name}
+                                        id={`items-ingredient-${idx}-name`}
+                                        onChange={handleAutocompleteChange}
+                                        renderInput={(params) => <TextField
+                                            {...params}
+                                            size="small"
+                                            label="Ingredient"
+                                            variant="standard"
+                                            value={{ label: i.ingredient?.toString() }}
+                                        />}
+                                    />
+                                </Grid2>
+                                <Grid2 xs={12} sm={4}>
+                                    <TextField
+                                        label="Description"
+                                        variant="standard"
+                                        fullWidth
+                                        id={`items-description-${idx}`}
+                                        value={i.description?.toString()}
+                                        onChange={handleNestedChange}
+                                        size="small"
+                                    />
+                                </Grid2>
+                            </Grid2>
+                            <IconButton
+                                id={`items-${i.key}`}
+                                color="primary"
+                                onClick={deleteDynamicFormItem}
+                                tabIndex={-1}
+                            >
+                                <HighlightOffIcon />
+                            </IconButton>
+                        </Stack>
+                    ))}
+                </Stack>
+                <Button variant="outlined" onClick={onAddIngredientClick}>Add ingredient</Button>
+                <Typography variant="h2">Steps</Typography>
+                <Stack gap={1} sx={{ mb: 4 }}>
+                    {formData.steps.map((s, idx) => (
+                        <Stack direction="row" key={s.key}>
                             <TextField
-                                sx={{ minWidth: "100%" }}
-                                label="Recipe Name"
-                                variant="standard"
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <TextField
-                                sx={{ minWidth: "100%" }}
-                                label="Description"
+                                sx={{ minWidth: "90%" }}
+                                label={`Step ${idx + 1}`}
                                 variant="standard"
                                 multiline
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
+                                id={`steps-description-${idx}`}
+                                value={s.description}
+                                onChange={handleNestedChange}
                             />
-                        </div>
-                        <div>
-                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                                <InputLabel id="meal-select-label">Meal</InputLabel>
-                                <Select
-                                    labelId="meal-select-label"
-                                    id="mealName"
-                                    name="mealName"
-                                    defaultValue=""
-                                    value={formData.mealName}
-                                    onChange={handleChange}
-                                >
-                                    {meals?.map(m => (
-                                        <MenuItem value={m.name} key={_.uniqueId()}>
-                                            {m.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div>
-                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                                <InputLabel id="type-select-label">Type</InputLabel>
-                                <Select
-                                    labelId="type-select-label"
-                                    id="typeName"
-                                    name="typeName"
-                                    defaultValue=""
-                                    value={formData.typeName}
-                                    onChange={handleChange}
-                                >
-                                    {types?.map(t => (
-                                        <MenuItem value={t.name} key={_.uniqueId()}>
-                                            {t.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div>
-                            <FormControlLabel control={<Checkbox
-                                id="private"
-                                name="private"
-                                checked={formData.private}
-                                onChange={handleCheckboxChange}
-                            />} label="Private Recipe?" />
-                        </div>
-                    </Stack>
-                </div>
+                            <IconButton
+                                id={`steps-${s.key}`}
+                                color="primary"
+                                onClick={deleteDynamicFormItem}
+                                tabIndex={-1}
+                            >
+                                <HighlightOffIcon />
+                            </IconButton>
+                        </Stack>
+                    ))}
+                </Stack>
+                <Button variant="outlined" onClick={onAddStepClick}>Add step</Button>
+                <Typography variant="h2">Notes</Typography>
+                <Stack gap={1} sx={{ mb: 4 }}>
+                    {formData.notes.map((n, idx) => (
+                        <Stack direction="row" key={n.key}>
+                            <TextField
+                                key={n.key}
+                                sx={{ minWidth: "90%" }}
+                                label={`Note`}
+                                variant="standard"
+                                multiline
+                                id={`notes-note-${idx}`}
+                                value={n.note}
+                                onChange={handleNestedChange}
+                            />
+                            <IconButton
+                                id={`notes-${n.key}`}
+                                color="primary"
+                                onClick={deleteDynamicFormItem}
+                                tabIndex={-1}
+                            >
+                                <HighlightOffIcon />
+                            </IconButton>
+                        </Stack>
+                    ))}
+                </Stack>
+                <Button variant="outlined" onClick={onAddNoteClick}>Add note</Button>
                 <div>
-                    <h2>Ingredients</h2>
-                    <Stack gap={1} sx={{ mb: 4 }}>
-                        {formData.items.map((i, idx) => (
-                            <Stack direction="row" key={i.key}>
-                                <Grid2 container spacing={2} xs>
-                                    <Grid2 xs={12} sm={2}>
-                                        <TextField
-                                            // sx={{ maxWidth: "30%" }}
-                                            label="Amount"
-                                            variant="standard"
-                                            fullWidth
-                                            id={`items-amount-${idx}`}
-                                            value={i.amount}
-                                            onChange={handleNestedChange}
-                                            size="small"
-                                        />
-                                    </Grid2>
-                                    <Grid2 xs={12} sm={2}>
-                                        <Autocomplete
-                                            disablePortal
-                                            // autoComplete
-                                            // autoHighlight
-                                            // autoSelect
-                                            disableClearable
-                                            options={units}
-                                            getOptionLabel={u => `${u.short} (${u.plural})`}
-                                            id={`items-unit-${idx}-short`}
-                                            onChange={handleAutocompleteChange}
-                                            renderInput={(params) => <TextField
-                                                {...params}
-                                                size="small"
-                                                label="Unit"
-                                                variant="standard"
-                                                value={{ label: i.unit?.toString() }}
-                                            />}
-                                        />
-                                    </Grid2>
-                                    <Grid2 xs={12} sm={4}>
-                                        <Autocomplete
-                                            disablePortal
-                                            // autoComplete
-                                            // autoHighlight
-                                            // autoSelect
-                                            disableClearable
-                                            options={ingredients}
-                                            getOptionLabel={i => i.name}
-                                            id={`items-ingredient-${idx}-name`}
-                                            onChange={handleAutocompleteChange}
-                                            renderInput={(params) => <TextField
-                                                {...params}
-                                                size="small"
-                                                label="Ingredient"
-                                                variant="standard"
-                                                value={{ label: i.ingredient?.toString() }}
-                                            />}
-                                        />
-                                    </Grid2>
-                                    <Grid2 xs={12} sm={4}>
-                                        <TextField
-                                            label="Description"
-                                            variant="standard"
-                                            fullWidth
-                                            id={`items-description-${idx}`}
-                                            value={i.description?.toString()}
-                                            onChange={handleNestedChange}
-                                            size="small"
-                                        />
-                                    </Grid2>
-                                </Grid2>
-                                <IconButton
-                                    id={`items-${i.key}`}
-                                    color="primary"
-                                    onClick={deleteDynamicFormItem}
-                                    tabIndex={-1}
-                                >
-                                    <HighlightOffIcon />
-                                </IconButton>
-                            </Stack>
-                        ))}
-                    </Stack>
-                    <Button variant="outlined" onClick={onAddIngredientClick}>Add ingredient</Button>
+                    <Button
+                        variant="contained"
+                        sx={{ mt: 4 }}
+                        onClick={addNewRecipe}
+                    >
+                        Submit recipe
+                    </Button>
                 </div>
-                <div>
-                    <h2>Steps</h2>
-                    <Stack gap={1} sx={{ mb: 4 }}>
-                        {formData.steps.map((s, idx) => (
-                            <Stack direction="row" key={s.key}>
-                                <TextField
-                                    sx={{ minWidth: "90%" }}
-                                    label={`Step ${idx + 1}`}
-                                    variant="standard"
-                                    multiline
-                                    id={`steps-description-${idx}`}
-                                    value={s.description}
-                                    onChange={handleNestedChange}
-                                />
-                                <IconButton
-                                    id={`steps-${s.key}`}
-                                    color="primary"
-                                    onClick={deleteDynamicFormItem}
-                                    tabIndex={-1}
-                                >
-                                    <HighlightOffIcon />
-                                </IconButton>
-                            </Stack>
-                        ))}
-                    </Stack>
-                    <Button variant="outlined" onClick={onAddStepClick}>Add step</Button>
-                </div>
-                <div>
-                    <h2>Notes</h2>
-                    <Stack gap={1} sx={{ mb: 4 }}>
-                        {formData.notes.map((n, idx) => (
-                            <Stack direction="row" key={n.key}>
-                                <TextField
-                                    key={n.key}
-                                    sx={{ minWidth: "90%" }}
-                                    label={`Note`}
-                                    variant="standard"
-                                    multiline
-                                    id={`notes-note-${idx}`}
-                                    value={n.note}
-                                    onChange={handleNestedChange}
-                                />
-                                <IconButton
-                                    id={`notes-${n.key}`}
-                                    color="primary"
-                                    onClick={deleteDynamicFormItem}
-                                    tabIndex={-1}
-                                >
-                                    <HighlightOffIcon />
-                                </IconButton>
-                            </Stack>
-                        ))}
-                    </Stack>
-                    <Button variant="outlined" onClick={onAddNoteClick}>Add note</Button>
-                </div>
-                <Button
-                    variant="contained"
-                    sx={{ mt: 4 }}
-                    onClick={addNewRecipe}
-                >
-                    Submit recipe
-                </Button>
             </form >
         </div >
     )

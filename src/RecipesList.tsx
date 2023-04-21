@@ -1,6 +1,7 @@
 import RecipeatsApi from "./api";
 import { useState, useEffect } from "react";
 import RecipesListItem from "./RecipesListItem";
+import { Typography } from "@mui/material";
 
 export interface IRecipeSummary {
     createdBy: string;
@@ -24,7 +25,7 @@ export default function RecipesList({ recipes, isLoading }: Props) {
 
     return (
         <div className="Recipes">
-            <h1>Recipes</h1>
+            <Typography variant="h1">Recipes</Typography>
             {recipes?.map(r => (<RecipesListItem key={r.id} recipe={r} />))}
         </div>
     )
