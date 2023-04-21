@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import RecipesList from './RecipesList'
 import RecipesHome from './RecipesHome'
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
+import RoutesList from './RoutesList'
 
 function App() {
 
@@ -26,10 +27,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Routes>
-          <Route path="/recipes" element={<RecipesHome />} />
-          <Route path="/recipes/:recipe_id" element={<Recipe />} />
-        </Routes>
+        <RoutesList />
       </BrowserRouter>
     </ThemeProvider>
   )
