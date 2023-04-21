@@ -1,4 +1,5 @@
 import { IRecipeItem } from "./Recipe"
+import { Typography } from "@mui/material";
 
 interface Props {
     item: IRecipeItem;
@@ -12,7 +13,7 @@ export default function RecipeItem({ item }: Props) {
 
     return (
         <li className="RecipeItem">
-            {itemText}
+            <Typography variant="body1">{itemText}</Typography>
         </li>
     )
 }

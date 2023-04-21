@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { IRecipeStep } from "./Recipe"
 
 interface Props {
@@ -6,6 +7,8 @@ interface Props {
 
 export default function RecipeItem({ step }: Props) {
     return (
-        <li className="RecipeStep">{step.description}</li>
+        <li className="RecipeStep">
+            <Typography variant="body1">{step.description}</Typography>
+        </li>
     )
 }
