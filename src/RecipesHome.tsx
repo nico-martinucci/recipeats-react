@@ -29,6 +29,10 @@ export default function RecipesHome() {
         setIsAddingRecipe(true);
     }
 
+    function toggleIsAddingRecipeOff() {
+        setIsAddingRecipe(false);
+    }
+
     function changeSearchTerm(evt: React.ChangeEvent<HTMLInputElement>) {
         setSearchTerm(evt.target.value);
     }
@@ -44,7 +48,7 @@ export default function RecipesHome() {
             }
             {isAddingRecipe &&
                 <>
-                    <RecipeAddForm />
+                    <RecipeAddForm toggleFormOff={toggleIsAddingRecipeOff} />
                 </>
             }
         </Container>

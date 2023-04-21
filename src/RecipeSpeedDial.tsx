@@ -4,12 +4,16 @@ import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 
-export default function RecipeSpeedDial() {
+interface Props {
+    toggleEditingOn: () => void;
+}
+
+export default function RecipeSpeedDial({ toggleEditingOn }: Props) {
     const actions = [
-        { icon: <EditOutlinedIcon />, name: 'Edit Recipe' },
-        { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo' },
-        { icon: <PostAddOutlinedIcon />, name: 'Add Note' },
-        { icon: <ContentCopyOutlinedIcon />, name: 'Fork Recipe' },
+        { icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: toggleEditingOn },
+        { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: () => { } },
+        { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: () => { } },
+        { icon: <ContentCopyOutlinedIcon />, name: 'Fork Recipe', click: () => { } },
     ];
     return (
         <SpeedDial
@@ -22,6 +26,7 @@ export default function RecipeSpeedDial() {
                     key={action.name}
                     icon={action.icon}
                     tooltipTitle={action.name}
+                    onClick={action.click}
                 />
             ))}
         </SpeedDial>
