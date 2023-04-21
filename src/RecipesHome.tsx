@@ -34,21 +34,19 @@ export default function RecipesHome() {
     }
 
     return (
-        <div className="RecipesHome">
-            <Container>
-                {!isAddingRecipe &&
-                    <>
-                        <Button variant="contained" onClick={showAddRecipeForm}>Add a recipe</Button>
-                        <RecipeSearch searchTerm={searchTerm} changeSearchTerm={changeSearchTerm} />
-                        <RecipesList recipes={recipes} isLoading={isLoading} />
-                    </>
-                }
-                {isAddingRecipe &&
-                    <>
-                        <RecipeAddForm />
-                    </>
-                }
-            </Container>
-        </div>
+        <Container>
+            {!isAddingRecipe &&
+                <>
+                    <Button variant="contained" onClick={showAddRecipeForm}>Add a recipe</Button>
+                    <RecipeSearch searchTerm={searchTerm} changeSearchTerm={changeSearchTerm} />
+                    <RecipesList recipes={recipes} isLoading={isLoading} />
+                </>
+            }
+            {isAddingRecipe &&
+                <>
+                    <RecipeAddForm />
+                </>
+            }
+        </Container>
     )
 }

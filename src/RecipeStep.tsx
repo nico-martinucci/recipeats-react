@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { IRecipeStep } from "./Recipe"
+import { IRecipeStep } from "./Recipe";
 
 interface Props {
     step: IRecipeStep;
