@@ -120,7 +120,10 @@ export default function Recipe() {
 
                         </CardActions>
                     </Card>
-                    <RecipeSpeedDial toggleEditingOn={toggleEditingOn} />
+                    <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+
+                        <RecipeSpeedDial toggleEditingOn={toggleEditingOn} />
+                    </div>
                 </Container>
             }
             {isEditing &&
