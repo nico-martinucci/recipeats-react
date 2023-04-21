@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import RecipeItem from "./RecipeItem";
 import RecipeStep from "./RecipeStep";
+import RecipeNote from "./RecipeNote";
 import RecipeatsApi from "./api";
 import { useState, useEffect } from "react";
 import {
@@ -80,6 +81,7 @@ export default function Recipe() {
                             <Typography variant="subtitle1">{recipe?.description}</Typography>
                         </Grid2>
                         <Grid2 xs={12} md={6}>
+                            <Typography variant="h2">Ingredients</Typography>
                             <ul>
                                 {recipe?.items.map(i => (
                                     <RecipeItem key={i.order} item={i} />
@@ -87,13 +89,21 @@ export default function Recipe() {
                             </ul>
                         </Grid2>
                         <Grid2 xs={12} md={6}>
+                            <Typography variant="h2">Steps</Typography>
                             <ol>
                                 {recipe?.steps.map(s => (
                                     <RecipeStep key={s.order} step={s} />
                                 ))}
                             </ol>
+                            <Typography variant="h2">Notes</Typography>
+                            <ul>
+                                {recipe?.notes.map(n => (
+                                    <RecipeNote key={n.id} note={n} />
+                                ))}
+                            </ul>
                         </Grid2>
                     </Grid2>
+
                 </CardContent>
                 <CardActions>
 
