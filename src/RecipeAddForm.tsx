@@ -13,6 +13,8 @@ import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
+import RecipeAddFormSpeedDial from "./RecipeAddFormSpeedDial";
+import AddNewIngredientDialog from "./AddNewIngredientDialog";
 
 interface IRecipeEntryData {
     name: string;
@@ -67,15 +69,16 @@ const initialData = {
 export default function RecipeAddForm({ data = initialData, toggleFormOff, mode }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
-    const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
+    const [isMealsLoading, setIsMealsLoading] = useState<boolean>(true);
     const [types, setTypes] = useState<IType[]>();
-    const [isTypesLoading, setIsTypesLoading] = useState<Boolean>(true);
+    const [isTypesLoading, setIsTypesLoading] = useState<boolean>(true);
     const [units, setUnits] = useState<IUnit[]>([{ plural: "", short: "", singular: "" }]);
-    const [isUnitsLoading, setIsUnitsLoading] = useState<Boolean>(true);
+    const [isUnitsLoading, setIsUnitsLoading] = useState<boolean>(true);
     const [ingredients, setIngredients] = useState<IIngredient[]>(
         [{ category: "", description: "", name: "" }]
     );
-    const [isIngredientsLoading, setIsIngredientsLoading] = useState<Boolean>(true);
+    const [isIngredientsLoading, setIsIngredientsLoading] = useState<boolean>(true);
+    const [isAddNewIngredientOpen, setIsAddNewIngredientOpen] = useState<boolean>(false);
 
     // console.log("form data at top of recipe add form", formData);
 
@@ -267,6 +270,10 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
         navigate(`/recipes/${newRecipe.id}`);
         // return <Navigate to="/" />
         toggleFormOff();
+    }
+
+    function toggleIsAddingNewIngredientOpen() {
+        setIsAddNewIngredientOpen(curr => !curr);
     }
 
     if (isMealsLoading || isTypesLoading ||
@@ -493,6 +500,11 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
                     </Button>
                 </div>
             </form >
+            <RecipeAddFormSpeedDial openAddIngredient={toggleIsAddingNewIngredientOpen} />
+            <AddNewIngredientDialog
+                open={isAddNewIngredientOpen}
+                toggleOpen={toggleIsAddingNewIngredientOpen}
+            />
         </div >
     )
 }
