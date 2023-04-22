@@ -128,7 +128,7 @@ export default function Recipe() {
             }
             {isEditing &&
                 <Container>
-                    <RecipeAddForm data={recipe} toggleFormOff={toggleEditingOff} />
+                    <RecipeAddForm data={recipe} toggleFormOff={toggleEditingOff} mode="edit" />
                 </Container>
             }
         </>

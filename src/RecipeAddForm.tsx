@@ -50,6 +50,7 @@ interface IIngredient {
 interface Props {
     data?: IRecipeEntryData;
     toggleFormOff: () => void;
+    mode: ("add" | "edit" | "fork");
 }
 
 const initialData = {
@@ -63,7 +64,7 @@ const initialData = {
     notes: []
 }
 
-export default function RecipeAddForm({ data = initialData, toggleFormOff }: Props) {
+export default function RecipeAddForm({ data = initialData, toggleFormOff, mode }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<Boolean>(true);
@@ -279,7 +280,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
     return (
         <div>
             <Button onClick={toggleFormOff}>Cancel</Button>
-            <Typography variant="h1">Add/Edit a Recipe</Typography>
+            <Typography variant="h1">{`${_.startCase(mode)} a Recipe`}</Typography>
             <form>
                 <Typography variant="h2">Recipe Basics</Typography>
                 <Stack gap={2} sx={{ mb: 4 }}>

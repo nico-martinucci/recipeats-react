@@ -48,7 +48,7 @@ export default function RecipesHome() {
             }
             {isAddingRecipe &&
                 <>
-                    <RecipeAddForm toggleFormOff={toggleIsAddingRecipeOff} />
+                    <RecipeAddForm toggleFormOff={toggleIsAddingRecipeOff} mode="add" />
                 </>
             }
         </Container>
