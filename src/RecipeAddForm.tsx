@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
 import "./RecipeAddForm.css"
@@ -75,6 +75,8 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
         [{ category: "", description: "", name: "" }]
     );
     const [isIngredientsLoading, setIsIngredientsLoading] = useState<Boolean>(true);
+
+    // console.log("form data at top of recipe add form", formData);
 
     const navigate = useNavigate();
 
@@ -241,6 +243,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
     }
 
     async function addNewRecipe(evt: React.MouseEvent) {
+        console.log("form data being submitted", formData);
         evt.preventDefault();
         adjustRecipeForSubmit(formData);
 
@@ -259,7 +262,10 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
 
         await Promise.allSettled(notePromises);
 
+        console.log("newRecipe", newRecipe)
         navigate(`/recipes/${newRecipe.id}`);
+        // return <Navigate to="/" />
+        toggleFormOff();
     }
 
     if (isMealsLoading || isTypesLoading ||
@@ -370,12 +376,13 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
                                         getOptionLabel={u => `${u.short} (${u.plural})`}
                                         id={`items-unit-${idx}-short`}
                                         onChange={handleAutocompleteChange}
+                                        value={units.find(u => u.short === i.unit)}
                                         renderInput={(params) => <TextField
                                             {...params}
                                             size="small"
                                             label="Unit"
                                             variant="standard"
-                                            value={{ label: i.unit?.toString() }}
+                                        // value={{ label: i.unit?.toString() }}
                                         />}
                                     />
                                 </Grid2>
@@ -390,12 +397,13 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff }: Pro
                                         getOptionLabel={i => i.name}
                                         id={`items-ingredient-${idx}-name`}
                                         onChange={handleAutocompleteChange}
+                                        value={ingredients.find(ing => ing.name === i.ingredient)}
                                         renderInput={(params) => <TextField
                                             {...params}
                                             size="small"
                                             label="Ingredient"
                                             variant="standard"
-                                            value={{ label: i.ingredient?.toString() }}
+                                        // value={{ label: i.ingredient?.toString() }}
                                         />}
                                     />
                                 </Grid2>
