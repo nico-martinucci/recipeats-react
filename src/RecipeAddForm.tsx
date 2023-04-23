@@ -43,7 +43,7 @@ interface IUnit {
     singular: string;
 }
 
-interface IIngredient {
+export interface IIngredient {
     category: string;
     description: string;
     name: string;
@@ -244,6 +244,10 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
             // @ts-ignore FIXME: this works but throws a weird error...
             [list]: curr[list].filter(i => i.key !== key)
         }))
+    }
+
+    function addNewIngredientToLocalList(ingredient: IIngredient) {
+        setIngredients(curr => [...curr, ingredient]);
     }
 
     async function addNewRecipe(evt: React.MouseEvent) {
@@ -500,10 +504,13 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
                     </Button>
                 </div>
             </form >
-            <RecipeAddFormSpeedDial openAddIngredient={toggleIsAddingNewIngredientOpen} />
+            <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+                <RecipeAddFormSpeedDial openAddIngredient={toggleIsAddingNewIngredientOpen} />
+            </div>
             <AddNewIngredientDialog
                 open={isAddNewIngredientOpen}
                 toggleOpen={toggleIsAddingNewIngredientOpen}
+                addLocalIngredient={addNewIngredientToLocalList}
             />
         </div >
     )
