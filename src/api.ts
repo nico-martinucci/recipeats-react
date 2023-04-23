@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IRecipe, IRecipeNote } from "./Recipe"
+import { IIngredient } from "./RecipeAddForm";
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -50,6 +51,12 @@ class RecipeatsApi {
         return res.recipe;
     }
 
+    static async addNewIngredient(ingredient: IIngredient) {
+        let res = await this.request("ingredients/", ingredient, "post");
+
+        return res.ingredient
+    }
+
     static async addNoteToRecipe(noteData: IRecipeNote, recipeId: number) {
         let res = await this.request(
             `recipes/${recipeId}/notes`,
@@ -82,6 +89,12 @@ class RecipeatsApi {
         let res = await this.request("units/");
 
         return res.units;
+    }
+
+    static async getIngredientCategories() {
+        let res = await this.request("categories/");
+
+        return res.categories;
     }
 
     // /** Get companies (filtered by name if not undefined) */
