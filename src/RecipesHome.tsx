@@ -23,8 +23,6 @@ export default function RecipesHome() {
         getRecipes();
     }, [searchTerm])
 
-    console.log("searchTerm", searchTerm)
-
     function showAddRecipeForm() {
         setIsAddingRecipe(true);
     }
