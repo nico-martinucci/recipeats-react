@@ -53,11 +53,11 @@ export default function Recipe() {
     const [isLoading, setIsLoading] = useState<Boolean>(true);
     const [isEditing, setIsEditing] = useState<Boolean>(false);
 
-    const { recipe_id } = useParams();
+    const { recipeId } = useParams();
 
     useEffect(function () {
         async function getRecipe() {
-            let recipe = await RecipeatsApi.getRecipeById(Number(recipe_id));
+            let recipe = await RecipeatsApi.getRecipeById(Number(recipeId));
             setRecipe(recipe);
             setIsLoading(false);
         }
