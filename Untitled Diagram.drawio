@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-04-22T19:10:25.902Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="rRrF8GvwvzsFeaW8JPKN" version="21.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-04-24T15:33:34.123Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="vHbJ8UkqE0T1fEPgvSdO" version="21.1.5" type="github">
   <diagram name="Page-1" id="cRDbK9eYe8UcyhCUnPsH">
     <mxGraphModel dx="1026" dy="636" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -18,6 +18,18 @@
         </mxCell>
         <mxCell id="WAWfPX1g_GacfLOxUS-W-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="oDOGdpad-vqsCHCc3Da3-2" target="WAWfPX1g_GacfLOxUS-W-3">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="oDOGdpad-vqsCHCc3Da3-2" target="WAWfPX1g_GacfLOxUS-W-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="WAWfPX1g_GacfLOxUS-W-30">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="485" y="240" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="485" y="220" />
+              <mxPoint x="850" y="220" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="oDOGdpad-vqsCHCc3Da3-2" value="RouteList" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="365" y="190" width="120" height="60" as="geometry" />
@@ -61,6 +73,12 @@
         <mxCell id="WAWfPX1g_GacfLOxUS-W-6" value="RecipesList" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="10" y="390" width="120" height="60" as="geometry" />
         </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="WAWfPX1g_GacfLOxUS-W-9" target="WAWfPX1g_GacfLOxUS-W-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="WAWfPX1g_GacfLOxUS-W-9" target="WAWfPX1g_GacfLOxUS-W-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="WAWfPX1g_GacfLOxUS-W-9" value="RecipeAddForm" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="320" y="390" width="120" height="60" as="geometry" />
         </mxCell>
@@ -80,7 +98,19 @@
           <mxGeometry x="530" y="90" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="WAWfPX1g_GacfLOxUS-W-22" value="RecipeSpeedDial" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="560" y="490" width="120" height="60" as="geometry" />
+          <mxGeometry x="485" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-24" value="RecipeAddFormSpeedDial" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-27" value="AddIngredientDialog" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="590" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-29" value="SignupForm" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WAWfPX1g_GacfLOxUS-W-30" value="LoginForm" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="240" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
