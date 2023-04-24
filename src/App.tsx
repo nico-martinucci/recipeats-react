@@ -8,6 +8,7 @@ import RecipesList from './RecipesList'
 import RecipesHome from './RecipesHome'
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import RoutesList from './RoutesList'
+import Navbar from './Navbar'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
+        <Navbar />
         <RoutesList />
       </BrowserRouter>
     </ThemeProvider>

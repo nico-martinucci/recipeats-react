@@ -17,7 +17,6 @@ function changeAmountsToNumberType(recipe: IRecipe) {
     }
 }
 
-// TODO: function generate "order" data for items and steps
 function addOrderToItemsAndSteps(recipe: IRecipe) {
     console.log("recipe", recipe);
     for (let i = 0; i < recipe.items.length; i++) {
@@ -28,3 +27,5 @@ function addOrderToItemsAndSteps(recipe: IRecipe) {
         recipe.steps[i].order = i + 1;
     }
 }
+
+//TODO: add in function to strip out empty ingredients, steps, notes
