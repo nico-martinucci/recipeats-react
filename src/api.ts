@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IRecipe, IRecipeNote } from "./Recipe"
 import { IIngredient } from "./RecipeAddForm";
+import { ISignupFormData } from "./SignupForm";
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -33,6 +34,18 @@ class RecipeatsApi {
 
     // // Individual API routes
 
+    static async fetchUserData(username: string) {
+        let res = await this.request(`users/${username}`);
+
+        return res.user;
+    }
+
+    static async signupUser(data: ISignupFormData) {
+        let res = await this.request(`users/signup`, data, "post");
+
+        return res.token;
+    }
+
     static async getAllRecipes(name = "") {
         let res = await this.request("recipes/", { name });
 
@@ -62,7 +75,7 @@ class RecipeatsApi {
             `recipes/${recipeId}/notes`,
             noteData,
             "post"
-        )
+        );
 
         return res.note;
     }
