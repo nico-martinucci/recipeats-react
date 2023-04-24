@@ -6,7 +6,7 @@ import { ISignupFormData } from "./SignupForm";
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-class RecipeatsApi {
+export default class RecipeatsApi {
 
     // TODO: get rid of once JWTs are stored in LS
     static token = import.meta.env.VITE_API_TOKEN;
@@ -44,6 +44,12 @@ class RecipeatsApi {
         let res = await this.request(`users/signup`, data, "post");
 
         return res.token;
+    }
+
+    static async verifyUserEmail(token: string | null) {
+        let res = await this.request("users/verify", { token }, "post");
+
+        return res.user;
     }
 
     static async getAllRecipes(name = "") {
@@ -109,27 +115,4 @@ class RecipeatsApi {
 
         return res.categories;
     }
-
-    // /** Get companies (filtered by name if not undefined) */
-
-    // static async getCompanies(nameLike: str) {
-    //     let res = await this.request("companies", { nameLike });
-    //     return res.companies;
-    // }
-
-    // /** Get details on a company by handle. */
-
-    // static async getCompany(handle) {
-    //     let res = await this.request(`companies/${handle}`);
-    //     return res.company;
-    // }
-
-    // /** Get list of jobs (filtered by title if not undefined) */
-
-    // static async getJobs(title) {
-    //     let res = await this.request("jobs", { title });
-    //     return res.jobs;
-    // }
 }
-
-export default RecipeatsApi;
