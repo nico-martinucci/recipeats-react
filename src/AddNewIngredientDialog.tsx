@@ -68,63 +68,61 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
     }
 
     return (
-        <div>
-            <Dialog open={open} onClose={toggleOpen}>
-                <DialogTitle>Add New Ingredient</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Please fill out the information below to add a new
-                        ingredient to the database.
-                    </DialogContentText>
-                    <form>
-                        <Stack gap={2} sx={{ mb: 4 }}>
+        <Dialog open={open} onClose={toggleOpen}>
+            <DialogTitle>Add New Ingredient</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Please fill out the information below to add a new
+                    ingredient to the database.
+                </DialogContentText>
+                <form>
+                    <Stack gap={2} sx={{ mb: 4 }}>
 
-                            <TextField
-                                sx={{ minWidth: "100%" }}
-                                label="Ingredient"
-                                variant="standard"
-                                id="name"
-                                name="name"
-                                value={formData.name}
+                        <TextField
+                            sx={{ minWidth: "100%" }}
+                            label="Ingredient"
+                            variant="standard"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+
+                        <TextField
+                            sx={{ minWidth: "100%" }}
+                            label="Description"
+                            variant="standard"
+                            multiline
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                        />
+
+                        <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                            <InputLabel id="category-select-label">Category</InputLabel>
+                            <Select
+                                labelId="category-select-label"
+                                id="category"
+                                name="category"
+                                defaultValue=""
+                                value={formData.category}
                                 onChange={handleChange}
-                            />
-
-                            <TextField
-                                sx={{ minWidth: "100%" }}
-                                label="Description"
-                                variant="standard"
-                                multiline
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                            />
-
-                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                                <InputLabel id="category-select-label">Category</InputLabel>
-                                <Select
-                                    labelId="category-select-label"
-                                    id="category"
-                                    name="category"
-                                    defaultValue=""
-                                    value={formData.category}
-                                    onChange={handleChange}
-                                >
-                                    {categories?.map(c => (
-                                        <MenuItem value={c.name} key={c.name}>
-                                            {c.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Stack>
-                    </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={toggleOpen}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+                            >
+                                {categories?.map(c => (
+                                    <MenuItem value={c.name} key={c.name}>
+                                        {c.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Stack>
+                </form>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={toggleOpen}>Cancel</Button>
+                <Button onClick={handleSubmit}>Submit</Button>
+            </DialogActions>
+        </Dialog>
     );
 }

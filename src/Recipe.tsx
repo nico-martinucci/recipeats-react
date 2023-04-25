@@ -10,6 +10,7 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import RecipeSpeedDial from "./RecipeSpeedDial";
 import RecipeAddForm from "./RecipeAddForm";
+import AddNewNoteDialog from "./AddNewNoteDialog";
 
 export interface IRecipeItem {
     amount: string | number | null;
@@ -50,8 +51,9 @@ export interface IRecipe {
 
 export default function Recipe() {
     const [recipe, setRecipe] = useState<IRecipe>();
-    const [isLoading, setIsLoading] = useState<Boolean>(true);
-    const [isEditing, setIsEditing] = useState<Boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
 
     const { recipeId } = useParams();
 
@@ -73,57 +75,83 @@ export default function Recipe() {
         setIsEditing(false);
     }
 
+    function toggleIsAddingNewNoteOpen() {
+        setIsAddNewNoteOpen(curr => !curr);
+    }
+
+    console.log("recipe in Recipe component:", recipe);
+
+    function addNewNoteToLocalList(note: IRecipeNote) {
+        setRecipe((curr) => ({
+            ...curr,
+            notes: [...curr?.notes || [], note],
+        }) as IRecipe)
+    }
+
     if (isLoading) return <h1>Loading...</h1>
 
     return (
         <>
             {!isEditing &&
-                <Container>
-                    <Card>
-                        <CardMedia
-                            sx={{ height: 300 }}
-                            image="https://hips.hearstapps.com/del.h-cdn.co/assets/18/11/2048x1152/hd-aspect-1520956952-chicken-tacos-horizontal.jpg?resize=1200:*"
-                            title="recipe image"
-                        />
-                        <CardContent>
-                            <Grid2 container spacing={2} xs>
-                                <Grid2 xs={12}>
-                                    <Typography variant="h1">{recipe?.name}</Typography>
-                                    <Typography variant="subtitle1">{recipe?.description}</Typography>
+                <>
+                    <Container>
+                        <Card>
+                            <CardMedia
+                                sx={{ height: 300 }}
+                                image="https://hips.hearstapps.com/del.h-cdn.co/assets/18/11/2048x1152/hd-aspect-1520956952-chicken-tacos-horizontal.jpg?resize=1200:*"
+                                title="recipe image"
+                            />
+                            <CardContent>
+                                <Grid2 container spacing={2} xs>
+                                    <Grid2 xs={12}>
+                                        <Typography variant="h1">{recipe?.name}</Typography>
+                                        <Typography variant="subtitle1">{recipe?.description}</Typography>
+                                    </Grid2>
+                                    <Grid2 xs={12} md={6}>
+                                        <Typography variant="h2">Ingredients</Typography>
+                                        <ul>
+                                            {recipe?.items.map(i => (
+                                                <RecipeItem key={i.order} item={i} />
+                                            ))}
+                                        </ul>
+                                    </Grid2>
+                                    <Grid2 xs={12} md={6}>
+                                        <Typography variant="h2">Steps</Typography>
+                                        <ol>
+                                            {recipe?.steps.map(s => (
+                                                <RecipeStep key={s.order} step={s} />
+                                            ))}
+                                        </ol>
+                                        <Typography variant="h2">Notes</Typography>
+                                        <ul>
+                                            {recipe?.notes.map(n => (
+                                                <RecipeNote key={n.id} note={n} />
+                                            ))}
+                                        </ul>
+                                    </Grid2>
                                 </Grid2>
-                                <Grid2 xs={12} md={6}>
-                                    <Typography variant="h2">Ingredients</Typography>
-                                    <ul>
-                                        {recipe?.items.map(i => (
-                                            <RecipeItem key={i.order} item={i} />
-                                        ))}
-                                    </ul>
-                                </Grid2>
-                                <Grid2 xs={12} md={6}>
-                                    <Typography variant="h2">Steps</Typography>
-                                    <ol>
-                                        {recipe?.steps.map(s => (
-                                            <RecipeStep key={s.order} step={s} />
-                                        ))}
-                                    </ol>
-                                    <Typography variant="h2">Notes</Typography>
-                                    <ul>
-                                        {recipe?.notes.map(n => (
-                                            <RecipeNote key={n.id} note={n} />
-                                        ))}
-                                    </ul>
-                                </Grid2>
-                            </Grid2>
 
-                        </CardContent>
-                        <CardActions>
+                            </CardContent>
+                            <CardActions>
 
-                        </CardActions>
-                    </Card>
-                    <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                        <RecipeSpeedDial recipeAuthor={recipe?.createdBy} toggleEditingOn={toggleEditingOn} />
-                    </div>
-                </Container>
+                            </CardActions>
+                        </Card>
+                        <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+                            <RecipeSpeedDial
+                                recipeAuthor={recipe?.createdBy}
+                                toggleEditingOn={toggleEditingOn}
+                                toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
+                            />
+                        </div>
+                    </Container>
+                    {/* TODO: need to add toggle open to speed dial above */}
+                    <AddNewNoteDialog
+                        recipeId={recipe?.id}
+                        open={isAddNewNoteOpen}
+                        toggleClose={toggleIsAddingNewNoteOpen}
+                        addLocalNote={addNewNoteToLocalList}
+                    />
+                </>
             }
             {isEditing &&
                 <Container>

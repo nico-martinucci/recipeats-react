@@ -9,9 +9,10 @@ import userContext from "./userContext";
 interface Props {
     recipeAuthor: string | undefined;
     toggleEditingOn: () => void;
+    toggleAddNoteOpen: () => void;
 }
 
-export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn }: Props) {
+export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn, toggleAddNoteOpen }: Props) {
 
     const user = useContext(userContext);
 
@@ -21,7 +22,7 @@ export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn }: Props
     const userActions = [
         { icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: toggleEditingOn },
         { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: () => { } },
-        { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: () => { } },
+        { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];
     return (
         <SpeedDial
