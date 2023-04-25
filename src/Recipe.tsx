@@ -3,7 +3,7 @@ import RecipeItem from "./RecipeItem";
 import RecipeStep from "./RecipeStep";
 import RecipeNote from "./RecipeNote";
 import RecipeatsApi from "./api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
     Card, CardActions, CardContent, CardMedia, Button, Typography, Container
 } from "@mui/material";
@@ -11,6 +11,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import RecipeSpeedDial from "./RecipeSpeedDial";
 import RecipeAddForm from "./RecipeAddForm";
 import AddNewNoteDialog from "./AddNewNoteDialog";
+import userContext from "./userContext";
 
 export interface IRecipeItem {
     amount: string | number | null;
@@ -55,6 +56,7 @@ export default function Recipe() {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
 
+    const user = useContext(userContext);
     const { recipeId } = useParams();
 
     useEffect(function () {
@@ -136,15 +138,14 @@ export default function Recipe() {
 
                             </CardActions>
                         </Card>
-                        <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+                        {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
                             <RecipeSpeedDial
                                 recipeAuthor={recipe?.createdBy}
                                 toggleEditingOn={toggleEditingOn}
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
                             />
-                        </div>
+                        </div>}
                     </Container>
-                    {/* TODO: need to add toggle open to speed dial above */}
                     <AddNewNoteDialog
                         recipeId={recipe?.id}
                         open={isAddNewNoteOpen}
