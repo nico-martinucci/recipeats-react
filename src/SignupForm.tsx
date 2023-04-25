@@ -35,7 +35,6 @@ const initialData = {
 export default function SignupForm({ signup }: Props) {
     const [formData, setFormData] = useState<ISignupFormData>(initialData);
 
-    const navigate = useNavigate();
     const user = useContext(userContext);
 
     function handleChange(

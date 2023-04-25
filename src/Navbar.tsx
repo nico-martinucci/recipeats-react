@@ -1,5 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     AppBar, Box, Toolbar, IconButton, Typography, InputBase, Badge, MenuItem,
@@ -11,6 +11,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import userContext from './userContext';
+
+interface Props {
+    logout: () => void;
+}
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -52,10 +57,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function Navbar() {
+export default function Navbar({ logout }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         useState<null | HTMLElement>(null);
+
+    const user = useContext(userContext);
+    const navigate = useNavigate();
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -77,6 +85,12 @@ export default function Navbar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    function handleLogout() {
+        logout();
+        handleMenuClose();
+        navigate("/");
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -94,8 +108,24 @@ export default function Navbar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            {user && <MenuItem onClick={handleMenuClose}>Profile</MenuItem>}
+            {user && <MenuItem onClick={handleLogout}>Log out</MenuItem>}
+            {!user &&
+                <Link
+                    to="/signup"
+                    className='remove-link'
+                    onClick={handleMenuClose}
+                >
+                    <MenuItem>Sign up</MenuItem>
+                </Link>}
+            {!user &&
+                <Link
+                    to="login"
+                    className='remove-link'
+                    onClick={handleMenuClose}
+                >
+                    <MenuItem>Log in</MenuItem>
+                </Link>}
         </Menu>
     );
 

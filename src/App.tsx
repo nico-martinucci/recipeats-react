@@ -68,6 +68,7 @@ function App() {
         }
         else {
             setIsLoading(false);
+            setUser(undefined);
         }
     }, [token]);
 
@@ -96,6 +97,11 @@ function App() {
         setToken(newToken);
     }
 
+    function logout() {
+        localStorage.removeItem("recipeatsToken");
+        setToken("");
+    }
+
     function setLocalStorageToken(token: string) {
         localStorage.setItem("recipeatsToken", token);
     }
@@ -105,7 +111,7 @@ function App() {
             <CssBaseline />
             <userContext.Provider value={user}>
                 <BrowserRouter>
-                    <Navbar />
+                    <Navbar logout={logout} />
                     <RoutesList signup={signup} login={login} setLocalStorageToken={setLocalStorageToken} />
                 </BrowserRouter>
             </userContext.Provider>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { Container, TextField, Button, Typography, Stack } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 
@@ -20,6 +20,8 @@ const initialData = {
 export default function LoginForm({ login }: Props) {
     const [formData, setFormData] = useState<ILoginFormData>(initialData);
 
+    const navigate = useNavigate();
+
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
             HTMLTextAreaElement>)
@@ -34,6 +36,7 @@ export default function LoginForm({ login }: Props) {
 
     function handleLogin() {
         login(formData);
+        navigate("/");
     }
 
     return (
