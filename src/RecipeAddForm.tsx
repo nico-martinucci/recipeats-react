@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
-import "./RecipeAddForm.css"
 import _ from "lodash"
 import {
     TextField, FormControl, InputLabel, Select, MenuItem,
