@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Recipe from './Recipe'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import RecipesList from './RecipesList'
-import RecipesHome from './RecipesHome'
+import jwt_decode from "jwt-decode";
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import RoutesList from './RoutesList'
 import Navbar from './Navbar'
-import RecipeatsApi from './api'
-import jwt_decode from "jwt-decode";
-import { ISignupFormData } from './SignupForm'
 import userContext from "./userContext";
+import RecipeatsApi from './api'
+import { ISignupFormData } from './SignupForm'
+import { ILoginFormData } from './LoginForm'
 
 
 export interface IUser {
@@ -26,7 +21,7 @@ export interface IUser {
 
 function App() {
     const [user, setUser] = useState<IUser>();
-    const [token, setToken] = useState<string | null>(localStorage.getItem("recipeatsToken"));
+    const [token, setToken] = useState<string>(localStorage.getItem("recipeatsToken") || "");
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const theme = createTheme({
@@ -82,10 +77,12 @@ function App() {
      * is successful calls getUserAndJobs. If not successful, return false so that
      * page doesn't redirect.
      */
-    // async function login(data) {
-    //   const newToken = await RecipeatsApi.loginUser(data);
-    //   setToken(newToken);
-    // }
+    async function login(data: ILoginFormData) {
+        console.log("login data", data);
+        const newToken = await RecipeatsApi.loginUser(data);
+        console.log("token", newToken)
+        setToken(newToken);
+    }
 
     /** 
      * signup function makes api call to "/auth/register" to retrieve token. If 
@@ -109,7 +106,7 @@ function App() {
             <userContext.Provider value={user}>
                 <BrowserRouter>
                     <Navbar />
-                    <RoutesList signup={signup} setLocalStorageToken={setLocalStorageToken} />
+                    <RoutesList signup={signup} login={login} setLocalStorageToken={setLocalStorageToken} />
                 </BrowserRouter>
             </userContext.Provider>
         </ThemeProvider >

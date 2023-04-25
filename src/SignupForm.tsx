@@ -1,7 +1,9 @@
-import { Button, Container, Stack, TextField, Typography } from "@mui/material"
 import { useState, useContext } from "react"
-import { SelectChangeEvent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import { Button, Container, Stack, TextField, Typography } from "@mui/material"
+import { SelectChangeEvent } from "@mui/material";
+
 import userContext from "./userContext";
 import EmailVerificationPending from "./EmailVerificationPending";
 
@@ -35,7 +37,6 @@ export default function SignupForm({ signup }: Props) {
 
     const navigate = useNavigate();
     const user = useContext(userContext);
-    console.log("user at top of signup form", user)
 
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |

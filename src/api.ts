@@ -2,6 +2,7 @@ import axios from "axios";
 import { IRecipe, IRecipeNote } from "./Recipe"
 import { IIngredient } from "./RecipeAddForm";
 import { ISignupFormData } from "./SignupForm";
+import { ILoginFormData } from "./LoginForm";
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -50,6 +51,12 @@ export default class RecipeatsApi {
         let res = await this.request("users/verify", { token }, "post");
 
         return res.user;
+    }
+
+    static async loginUser(data: ILoginFormData) {
+        let res = await this.request("users/login", data, "post");
+        console.log("res in loginUser static method", res);
+        return res.token
     }
 
     static async getAllRecipes(name = "") {
