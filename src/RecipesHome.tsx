@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import { IRecipeSummary } from "./RecipesList";
 import RecipeatsApi from "./api";
 import userContext from "./userContext";
+import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
 
 export default function RecipesHome() {
     const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(false);
@@ -42,9 +43,11 @@ export default function RecipesHome() {
         <Container>
             {!isAddingRecipe &&
                 <>
-                    {user && <Button variant="contained" onClick={showAddRecipeForm}>Add a recipe</Button>}
                     <RecipeSearch searchTerm={searchTerm} changeSearchTerm={changeSearchTerm} />
                     <RecipesList recipes={recipes} isLoading={isLoading} />
+                    {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
+                        <RecipesHomeSpeedDial showAddRecipeForm={showAddRecipeForm} />
+                    </div>}
                 </>
             }
             {isAddingRecipe &&

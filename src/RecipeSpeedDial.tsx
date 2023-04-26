@@ -26,6 +26,7 @@ export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn, toggleA
         { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: () => { } },
         { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];
+
     return (
         <SpeedDial
             ariaLabel="SpeedDial basic example"
