@@ -1,14 +1,13 @@
 import { IRecipe } from "../Recipe";
 
-export function adjustRecipeForSubmit(recipe: IRecipe) {
-    addUserToRecipe(recipe);
+export function adjustRecipeForSubmit(recipe: IRecipe, username: string) {
+    addUserToRecipe(recipe, username);
     changeAmountsToNumberType(recipe);
     addOrderToItemsAndSteps(recipe);
 }
 
-function addUserToRecipe(recipe: IRecipe) {
-    // TODO: change from hardcoded test user to current user when local storage is live
-    recipe.createdBy = "test";
+function addUserToRecipe(recipe: IRecipe, username: string) {
+    recipe.createdBy = username;
 }
 
 function changeAmountsToNumberType(recipe: IRecipe) {
