@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
@@ -14,6 +14,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
 import RecipeAddFormSpeedDial from "./RecipeAddFormSpeedDial";
 import AddNewIngredientDialog from "./AddNewIngredientDialog";
+import userContext from "./userContext";
 
 interface IRecipeEntryData {
     name: string;
@@ -82,6 +83,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
     // console.log("form data at top of recipe add form", formData);
 
     const navigate = useNavigate();
+    const user = useContext(userContext);
 
     useEffect(function () {
         async function getFormSelectData() {
@@ -252,7 +254,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
     async function addNewRecipe(evt: React.MouseEvent) {
         console.log("form data being submitted", formData);
         evt.preventDefault();
-        adjustRecipeForSubmit(formData);
+        adjustRecipeForSubmit(formData, user?.username || "");
 
         let newRecipe = await RecipeatsApi.addNewRecipe(formData);
         let notePromises = [];
@@ -292,7 +294,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
             <Button onClick={toggleFormOff}>Cancel</Button>
             <Typography variant="h1">{`${_.startCase(mode)} a Recipe`}</Typography>
             <form>
-                <Typography variant="h2">Recipe Basics</Typography>
+                <Typography variant="h2" mt={3}>Recipe Basics</Typography>
                 <Stack gap={2} sx={{ mb: 4 }}>
 
                     <TextField
@@ -442,7 +444,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
                     ))}
                 </Stack>
                 <Button variant="outlined" onClick={onAddIngredientClick}>Add ingredient</Button>
-                <Typography variant="h2">Steps</Typography>
+                <Typography variant="h2" mt={6}>Steps</Typography>
                 <Stack gap={1} sx={{ mb: 4 }}>
                     {formData.steps.map((s, idx) => (
                         <Stack direction="row" key={s.key || s.id}>
@@ -467,7 +469,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
                     ))}
                 </Stack>
                 <Button variant="outlined" onClick={onAddStepClick}>Add step</Button>
-                <Typography variant="h2">Notes</Typography>
+                <Typography variant="h2" mt={6}>Notes</Typography>
                 <Stack gap={1} sx={{ mb: 4 }}>
                     {formData.notes.map((n, idx) => (
                         <Stack direction="row" key={n.key || n.id}>
