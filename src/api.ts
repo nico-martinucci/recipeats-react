@@ -3,6 +3,7 @@ import { IRecipe, IRecipeBasics, IRecipeItem, IRecipeNote, IRecipeStep } from ".
 import { IIngredient } from "./RecipeAddForm";
 import { ISignupFormData } from "./SignupForm";
 import { ILoginFormData } from "./LoginForm";
+import { IUploadPhotoEntryData } from "./UploadRecipePhotoDialog";
 
 // TODO: update this to environ variable down the road
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -93,7 +94,18 @@ export default class RecipeatsApi {
         return res.note;
     }
 
-    static async updateRecipeBasics(basicData: IRecipeBasics, recipeId: number) {
+    static async addRecipePhoto(photoData: FormData, recipeId: number) {
+        let res = await this.request(
+            `recipes/${recipeId}/photos`,
+            photoData,
+            "post",
+            { "Content-Type": "multipart/form-data" }
+        )
+
+        return res.newPhoto;
+    }
+
+    static async updateRecipeBasics(basicData: IRecipeBasics, recipeId: number | undefined) {
         let res = await this.request(
             `recipes/${recipeId}/basics`,
             basicData,
