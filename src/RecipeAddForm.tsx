@@ -535,7 +535,9 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
                         sx={{ mt: 4 }}
                         onClick={handleSubmitButtonClick}
                     >
-                        Submit recipe
+                        {mode === "add" && "Submit recipe"}
+                        {mode === "edit" && "Save edits"}
+                        {mode === "fork" && "Create fork"}
                     </Button>
                 </div>
             </form >
