@@ -13,6 +13,16 @@ import RecipeAddForm from "./RecipeAddForm";
 import AddNewNoteDialog from "./AddNewNoteDialog";
 import userContext from "./userContext";
 
+export interface IRecipeBasics {
+    name?: string;
+    description: string;
+    createdBy?: string;
+    id?: string;
+    mealName: string;
+    typeName: string;
+    private: boolean;
+}
+
 export interface IRecipeItem {
     amount: string | number | null;
     description: string;
@@ -81,13 +91,15 @@ export default function Recipe() {
         setIsAddNewNoteOpen(curr => !curr);
     }
 
-    console.log("recipe in Recipe component:", recipe);
-
     function addNewNoteToLocalList(note: IRecipeNote) {
         setRecipe((curr) => ({
             ...curr,
             notes: [...curr?.notes || [], note],
         }) as IRecipe)
+    }
+
+    function updateFullRecipe(newRecipe: IRecipe) {
+        setRecipe(newRecipe);
     }
 
     if (isLoading) return <h1>Loading...</h1>
@@ -156,7 +168,13 @@ export default function Recipe() {
             }
             {isEditing &&
                 <Container>
-                    <RecipeAddForm data={recipe} toggleFormOff={toggleEditingOff} mode="edit" />
+                    <RecipeAddForm
+                        data={recipe}
+                        toggleFormOff={toggleEditingOff}
+                        mode="edit"
+                        recipeId={recipe?.id}
+                        updateFullRecipe={updateFullRecipe}
+                    />
                 </Container>
             }
         </>

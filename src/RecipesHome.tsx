@@ -52,7 +52,11 @@ export default function RecipesHome() {
             }
             {isAddingRecipe &&
                 <>
-                    <RecipeAddForm toggleFormOff={toggleIsAddingRecipeOff} mode="add" />
+                    <RecipeAddForm
+                        toggleFormOff={toggleIsAddingRecipeOff}
+                        mode="add"
+                        recipeId={-1}
+                    />
                 </>
             }
         </Container>

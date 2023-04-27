@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IRecipe, IRecipeNote } from "./Recipe"
+import { IRecipe, IRecipeBasics, IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe"
 import { IIngredient } from "./RecipeAddForm";
 import { ISignupFormData } from "./SignupForm";
 import { ILoginFormData } from "./LoginForm";
@@ -91,6 +91,49 @@ export default class RecipeatsApi {
         );
 
         return res.note;
+    }
+
+    static async updateRecipeBasics(basicData: IRecipeBasics, recipeId: number) {
+        let res = await this.request(
+            `recipes/${recipeId}/basics`,
+            basicData,
+            "put"
+        );
+
+        return res.newBasics;
+    }
+
+    static async updateRecipeItems(itemsData: { items: IRecipeItem[] }, recipeId: number) {
+        let res = await this.request(
+            `recipes/${recipeId}/items`,
+            itemsData,
+            "put"
+        );
+
+        return res.newItems;
+    }
+
+    static async updateRecipeSteps(stepsData: { steps: IRecipeStep[] }, recipeId: number) {
+        let res = await this.request(
+            `recipes/${recipeId}/steps`,
+            stepsData,
+            "put"
+        );
+
+        return res.newSteps;
+    }
+
+    static async updateRecipeNotes(
+        notesData: { notes: IRecipeNote[], username: string | undefined },
+        recipeId: number
+    ) {
+        let res = await this.request(
+            `recipes/${recipeId}/notes`,
+            notesData,
+            "put"
+        );
+
+        return res.newNotes;
     }
 
     static async getAllIngredients(name = "") {

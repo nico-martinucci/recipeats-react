@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-import { IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
+import { IRecipe, IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
 import RecipeatsApi from "./api";
 import _ from "lodash"
 import {
@@ -53,6 +53,8 @@ interface Props {
     data?: IRecipeEntryData;
     toggleFormOff: () => void;
     mode: ("add" | "edit" | "fork");
+    recipeId: number | undefined;
+    updateFullRecipe?: ((recipe: IRecipe) => void);
 }
 
 const initialData = {
@@ -66,7 +68,7 @@ const initialData = {
     notes: []
 }
 
-export default function RecipeAddForm({ data = initialData, toggleFormOff, mode }: Props) {
+export default function RecipeAddForm({ data = initialData, toggleFormOff, mode, recipeId = 0, updateFullRecipe }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<boolean>(true);
@@ -251,11 +253,18 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
         setIngredients(curr => [...curr, ingredient]);
     }
 
-    async function addNewRecipe(evt: React.MouseEvent) {
-        console.log("form data being submitted", formData);
+    function handleSubmitButtonClick(evt: React.MouseEvent) {
         evt.preventDefault();
+
         adjustRecipeForSubmit(formData, user?.username || "");
 
+        if (mode === "add") addNewRecipe();
+        if (mode === "edit") submitRecipeEdits();
+
+        toggleFormOff();
+    }
+
+    async function addNewRecipe() {
         let newRecipe = await RecipeatsApi.addNewRecipe(formData);
         let notePromises = [];
 
@@ -271,10 +280,35 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
 
         await Promise.allSettled(notePromises);
 
-        console.log("newRecipe", newRecipe)
         navigate(`/recipes/${newRecipe.id}`);
         // return <Navigate to="/" />
-        toggleFormOff();
+    }
+
+    async function submitRecipeEdits() {
+        const basicData = {
+            description: formData.description,
+            mealName: formData.mealName,
+            typeName: formData.typeName,
+            private: formData.private
+        };
+
+        await Promise.allSettled([
+            RecipeatsApi.updateRecipeBasics(basicData, recipeId),
+            RecipeatsApi.updateRecipeItems({ items: formData.items }, recipeId),
+            RecipeatsApi.updateRecipeSteps({ steps: formData.steps }, recipeId),
+            RecipeatsApi.updateRecipeNotes(
+                {
+                    notes: formData.notes,
+                    username: user?.username
+                },
+                recipeId
+            )
+        ]);
+
+        const updatedRecipe = await RecipeatsApi.getRecipeById(recipeId);
+
+        // @ts-ignore FIXME: how to deal with an optional function?
+        updateFullRecipe(updatedRecipe);
     }
 
     function toggleIsAddingNewIngredientOpen() {
@@ -499,7 +533,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode 
                     <Button
                         variant="contained"
                         sx={{ mt: 4 }}
-                        onClick={addNewRecipe}
+                        onClick={handleSubmitButtonClick}
                     >
                         Submit recipe
                     </Button>
