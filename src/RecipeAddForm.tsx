@@ -339,6 +339,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        disabled={mode === "edit"}
                     />
 
                     <TextField
