@@ -11,9 +11,15 @@ interface Props {
     recipeAuthor: string | undefined;
     toggleEditingOn: () => void;
     toggleAddNoteOpen: () => void;
+    toggleUploadPhotoOpen: () => void;
 }
 
-export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn, toggleAddNoteOpen }: Props) {
+export default function RecipeSpeedDial({
+    recipeAuthor,
+    toggleEditingOn,
+    toggleAddNoteOpen,
+    toggleUploadPhotoOpen,
+}: Props) {
 
     const user = useContext(userContext);
 
@@ -23,7 +29,7 @@ export default function RecipeSpeedDial({ recipeAuthor, toggleEditingOn, toggleA
     ];
     const userActions = [
         { icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: toggleEditingOn },
-        { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: () => { } },
+        { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: toggleUploadPhotoOpen },
         { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];
 

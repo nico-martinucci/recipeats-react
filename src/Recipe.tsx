@@ -12,6 +12,7 @@ import RecipeSpeedDial from "./RecipeSpeedDial";
 import RecipeAddForm from "./RecipeAddForm";
 import AddNewNoteDialog from "./AddNewNoteDialog";
 import userContext from "./userContext";
+import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
 
 export interface IRecipeBasics {
     name?: string;
@@ -66,6 +67,7 @@ export default function Recipe() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
+    const [isUploadNewPhotoOpen, setIsUploadNewPhotoOpen] = useState<boolean>(false);
 
     const user = useContext(userContext);
     const { recipeId } = useParams();
@@ -96,6 +98,17 @@ export default function Recipe() {
         setRecipe((curr) => ({
             ...curr,
             notes: [...curr?.notes || [], note],
+        }) as IRecipe)
+    }
+
+    function toggleIsUploadingNewPhotoOpen() {
+        setIsUploadNewPhotoOpen(curr => !curr);
+    }
+
+    function updateRecipeCoverPhoto(photoUrl: string) {
+        setRecipe(curr => ({
+            ...curr,
+            photoUrl: photoUrl
         }) as IRecipe)
     }
 
@@ -156,6 +169,7 @@ export default function Recipe() {
                                 recipeAuthor={recipe?.createdBy}
                                 toggleEditingOn={toggleEditingOn}
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
+                                toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}
                             />
                         </div>}
                     </Container>
@@ -164,6 +178,12 @@ export default function Recipe() {
                         open={isAddNewNoteOpen}
                         toggleClose={toggleIsAddingNewNoteOpen}
                         addLocalNote={addNewNoteToLocalList}
+                    />
+                    <UploadRecipePhotoDialog
+                        recipeId={recipe?.id}
+                        open={isUploadNewPhotoOpen}
+                        toggleClose={toggleIsUploadingNewPhotoOpen}
+                        updatePhoto={updateRecipeCoverPhoto}
                     />
                 </>
             }
