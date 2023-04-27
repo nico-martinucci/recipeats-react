@@ -58,6 +58,7 @@ export interface IRecipe {
     steps: IRecipeStep[];
     notes: IRecipeNote[];
     private: boolean;
+    photoUrl?: string;
 }
 
 export default function Recipe() {
@@ -112,7 +113,7 @@ export default function Recipe() {
                         <Card>
                             <CardMedia
                                 sx={{ height: 300 }}
-                                image="https://hips.hearstapps.com/del.h-cdn.co/assets/18/11/2048x1152/hd-aspect-1520956952-chicken-tacos-horizontal.jpg?resize=1200:*"
+                                image={recipe?.photoUrl}
                                 title="recipe image"
                             />
                             <CardContent>
