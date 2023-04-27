@@ -321,8 +321,6 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
         return <h1>Loading...</h1>
     }
 
-    // FIXME: input state handling isn't working for checkbox - check BYBO for how we did it there
-
     return (
         <div>
             <Button onClick={toggleFormOff}>Cancel</Button>
