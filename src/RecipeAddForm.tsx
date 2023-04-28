@@ -52,7 +52,7 @@ export interface IIngredient {
 interface Props {
     data?: IRecipeEntryData;
     toggleFormOff: () => void;
-    toggleMode: (mode: "add" | "edit" | "fork") => void;
+    toggleMode?: (mode: "add" | "edit" | "fork") => void;
     mode: ("add" | "edit" | "fork");
     recipeId: number | undefined;
     updateFullRecipe?: ((recipe: IRecipe) => void);
