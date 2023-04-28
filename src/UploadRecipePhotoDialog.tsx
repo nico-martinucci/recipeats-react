@@ -59,8 +59,13 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
 
                 const newPhoto = await RecipeatsApi.addRecipePhoto(data, recipeId);
 
-                console.log("new photo!!!", newPhoto);
                 setIsLoading(false);
+
+                if (formData.makeCover) {
+                    updatePhoto(newPhoto.photoUrl)
+                }
+
+                handleToggleClose();
             }
             postUploadPhoto();
         } else {
