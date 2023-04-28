@@ -5,6 +5,7 @@ import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import userContext from "./userContext";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
     toggleEditingOn: () => void;
     toggleAddNoteOpen: () => void;
     toggleUploadPhotoOpen: () => void;
+    toggleMode: (mode: "add" | "edit" | "fork") => void;
 }
 
 export default function RecipeSpeedDial({
@@ -19,16 +21,27 @@ export default function RecipeSpeedDial({
     toggleEditingOn,
     toggleAddNoteOpen,
     toggleUploadPhotoOpen,
+    toggleMode
 }: Props) {
 
     const user = useContext(userContext);
 
     const generalActions = [
-        { icon: <ContentCopyOutlinedIcon />, name: 'Fork Recipe', click: () => { } },
-        { icon: <StarRateOutlinedIcon />, name: "Rate/Review Recipe", click: () => { } }
+        {
+            icon: <RestaurantIcon />, name: 'Fork Recipe', click: () => {
+                toggleMode("fork");
+                toggleEditingOn();
+            }
+        },
+        { icon: <StarRateOutlinedIcon />, name: "Rate/Review Recipe (coming soon)", click: () => { } }
     ];
     const userActions = [
-        { icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: toggleEditingOn },
+        {
+            icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: () => {
+                toggleMode("edit");
+                toggleEditingOn();
+            }
+        },
         { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: toggleUploadPhotoOpen },
         { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];

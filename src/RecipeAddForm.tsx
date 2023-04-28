@@ -52,6 +52,7 @@ export interface IIngredient {
 interface Props {
     data?: IRecipeEntryData;
     toggleFormOff: () => void;
+    toggleMode: (mode: "add" | "edit" | "fork") => void;
     mode: ("add" | "edit" | "fork");
     recipeId: number | undefined;
     updateFullRecipe?: ((recipe: IRecipe) => void);
@@ -68,7 +69,7 @@ const initialData = {
     notes: []
 }
 
-export default function RecipeAddForm({ data = initialData, toggleFormOff, mode, recipeId = 0, updateFullRecipe }: Props) {
+export default function RecipeAddForm({ data = initialData, toggleFormOff, toggleMode, mode, recipeId = 0, updateFullRecipe }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<boolean>(true);
@@ -258,21 +259,30 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
 
         adjustRecipeForSubmit(formData, user?.username || "");
 
-        if (mode === "add") addNewRecipe();
+        if (mode === "add" || mode === "fork") addNewRecipe();
         if (mode === "edit") submitRecipeEdits();
 
         toggleFormOff();
     }
 
     async function addNewRecipe() {
-        let newRecipe = await RecipeatsApi.addNewRecipe(formData);
+        let newRecipe;
+
+        if (mode === "fork") {
+            newRecipe = await RecipeatsApi.addNewRecipe({ ...formData, forkedFrom: recipeId });
+        } else {
+            newRecipe = await RecipeatsApi.addNewRecipe(formData);
+        }
+
+        console.log("newRecipe in addNewRecipe func in add form", newRecipe);
+
         let notePromises = [];
 
         for (let note of formData.notes) {
             notePromises.push(RecipeatsApi.addNoteToRecipe(
                 {
                     ...note,
-                    username: "test"
+                    username: user?.username
                 },
                 newRecipe.id
             ))
@@ -280,7 +290,15 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
 
         await Promise.allSettled(notePromises);
 
-        navigate(`/recipes/${newRecipe.id}`);
+        const newRecipeData = await RecipeatsApi.getRecipeById(newRecipe.id)
+
+        if (mode === "fork") {
+            // @ts-ignore FIXME: how to deal with an optional function?
+            updateFullRecipe(newRecipeData);
+        } else {
+            navigate(`/recipes/${newRecipe.id}`);
+        }
+
         // return <Navigate to="/" />
     }
 
@@ -324,7 +342,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, mode,
     return (
         <div>
             <Button onClick={toggleFormOff}>Cancel</Button>
-            <Typography variant="h1">{`${_.startCase(mode)} a Recipe`}</Typography>
+            <Typography variant="h1">{`${_.startCase(mode)} Recipe`}</Typography>
             <form>
                 <Typography variant="h2" mt={3}>Recipe Basics</Typography>
                 <Stack gap={2} sx={{ mb: 4 }}>

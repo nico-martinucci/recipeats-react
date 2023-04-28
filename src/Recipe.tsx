@@ -60,12 +60,14 @@ export interface IRecipe {
     notes: IRecipeNote[];
     private: boolean;
     photoUrl?: string;
+    forkedFrom?: number;
 }
 
 export default function Recipe() {
     const [recipe, setRecipe] = useState<IRecipe>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [mode, setMode] = useState<"add" | "edit" | "fork">("edit");
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
     const [isUploadNewPhotoOpen, setIsUploadNewPhotoOpen] = useState<boolean>(false);
 
@@ -82,12 +84,12 @@ export default function Recipe() {
         getRecipe();
     }, [])
 
-    function toggleEditingOn() {
-        setIsEditing(true);
+    function toggleEditing() {
+        setIsEditing(curr => !curr);
     }
 
-    function toggleEditingOff() {
-        setIsEditing(false);
+    function toggleMode(mode: "add" | "edit" | "fork") {
+        setMode(mode);
     }
 
     function toggleIsAddingNewNoteOpen() {
@@ -124,11 +126,11 @@ export default function Recipe() {
                 <>
                     <Container>
                         <Card>
-                            <CardMedia
+                            {recipe?.photoUrl && <CardMedia
                                 sx={{ height: 300 }}
                                 image={recipe?.photoUrl}
                                 title="recipe image"
-                            />
+                            />}
                             <CardContent>
                                 <Grid2 container spacing={2} xs>
                                     <Grid2 xs={12}>
@@ -167,9 +169,10 @@ export default function Recipe() {
                         {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
                             <RecipeSpeedDial
                                 recipeAuthor={recipe?.createdBy}
-                                toggleEditingOn={toggleEditingOn}
+                                toggleEditingOn={toggleEditing}
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
                                 toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}
+                                toggleMode={toggleMode}
                             />
                         </div>}
                     </Container>
@@ -180,7 +183,7 @@ export default function Recipe() {
                         addLocalNote={addNewNoteToLocalList}
                     />
                     <UploadRecipePhotoDialog
-                        recipeId={recipe?.id}
+                        recipeId={recipe?.id || -1}
                         open={isUploadNewPhotoOpen}
                         toggleClose={toggleIsUploadingNewPhotoOpen}
                         updatePhoto={updateRecipeCoverPhoto}
@@ -191,8 +194,9 @@ export default function Recipe() {
                 <Container>
                     <RecipeAddForm
                         data={recipe}
-                        toggleFormOff={toggleEditingOff}
-                        mode="edit"
+                        toggleFormOff={toggleEditing}
+                        toggleMode={toggleMode}
+                        mode={mode}
                         recipeId={recipe?.id}
                         updateFullRecipe={updateFullRecipe}
                     />
