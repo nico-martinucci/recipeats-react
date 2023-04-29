@@ -15,13 +15,13 @@ export default function VerifyEmail({ setLocalStorageToken }: Props) {
 
     useEffect(function () {
         async function verifyEmail() {
-            let user_token = await RecipeatsApi.verifyUserEmail(searchParams.get("token"));
+            let userToken = await RecipeatsApi.verifyUserEmail(searchParams.get("token"));
 
-            if (user_token && "error" in user_token) {
+            if (userToken && "error" in userToken) {
                 // TODO: add error handling here
             } else {
                 setIsVerifying(false);
-                setLocalStorageToken(user_token);
+                setLocalStorageToken(userToken);
             }
         }
 
