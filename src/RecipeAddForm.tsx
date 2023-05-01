@@ -427,6 +427,10 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                         value={i.amount}
                                         onChange={handleNestedChange}
                                         size="small"
+                                        inputProps={{
+                                            type: 'number',
+                                            pattern: '[0-9]*' // allows only digits
+                                        }}
                                     />
                                 </Grid2>
                                 <Grid2 xs={12} sm={2}>
