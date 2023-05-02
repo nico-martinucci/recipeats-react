@@ -14,6 +14,7 @@ interface Props {
     toggleAddNoteOpen: () => void;
     toggleUploadPhotoOpen: () => void;
     toggleMode: (mode: "add" | "edit" | "fork") => void;
+    toggleRateReviewOpen: () => void;
 }
 
 export default function RecipeSpeedDial({
@@ -21,23 +22,32 @@ export default function RecipeSpeedDial({
     toggleEditingOn,
     toggleAddNoteOpen,
     toggleUploadPhotoOpen,
-    toggleMode
+    toggleMode,
+    toggleRateReviewOpen
 }: Props) {
 
     const user = useContext(userContext);
 
     const generalActions = [
         {
-            icon: <RestaurantIcon />, name: 'Fork Recipe', click: () => {
+            icon: <RestaurantIcon />,
+            name: 'Fork Recipe',
+            click: () => {
                 toggleMode("fork");
                 toggleEditingOn();
             }
         },
-        { icon: <StarRateOutlinedIcon />, name: "Rate/Review Recipe (coming soon)", click: () => { } }
+        {
+            icon: <StarRateOutlinedIcon />,
+            name: "Rate/Review Recipe (coming soon)",
+            click: toggleRateReviewOpen
+        }
     ];
     const userActions = [
         {
-            icon: <EditOutlinedIcon />, name: 'Edit Recipe', click: () => {
+            icon: <EditOutlinedIcon />,
+            name: 'Edit Recipe',
+            click: () => {
                 toggleMode("edit");
                 toggleEditingOn();
             }

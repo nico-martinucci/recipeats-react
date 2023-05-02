@@ -54,21 +54,20 @@ export default function RecipeRateReviewDialog({
 
     return (
         <Dialog open={open} onClose={toggleClose}>
-            <DialogTitle>Add New Ingredient</DialogTitle>
+            <DialogTitle>Rate & Review</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Please fill out the information below to add a new
-                    ingredient to the database.
+                    Please fill out the information below to rate and review
+                    this recipe.
                 </DialogContentText>
                 <form>
                     <Stack gap={2} sx={{ mb: 4 }}>
-
                         <FormControlLabel control={<Checkbox
-                            id="private"
-                            name="private"
+                            id="isStarred"
+                            name="isStarred"
                             checked={formData.isStarred}
                             onChange={handleCheckboxChange}
-                        />} label="Private Recipe?" />
+                        />} label="Favorite?" />
                     </Stack>
                 </form>
             </DialogContent>

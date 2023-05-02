@@ -13,6 +13,7 @@ import RecipeAddForm from "./RecipeAddForm";
 import AddNewNoteDialog from "./AddNewNoteDialog";
 import userContext from "./userContext";
 import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
+import RecipeRateReviewDialog from "./RecipeRateReviewDialog";
 
 export interface IRecipeBasics {
     name?: string;
@@ -70,6 +71,7 @@ export default function Recipe() {
     const [mode, setMode] = useState<"add" | "edit" | "fork">("edit");
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
     const [isUploadNewPhotoOpen, setIsUploadNewPhotoOpen] = useState<boolean>(false);
+    const [isRateReviewOpen, setIsRateReviewOpen] = useState<boolean>(false);
 
     const user = useContext(userContext);
     const { recipeId } = useParams();
@@ -112,6 +114,10 @@ export default function Recipe() {
             ...curr,
             photoUrl: photoUrl
         }) as IRecipe)
+    }
+
+    function toggleIsRateReviewOpen() {
+        setIsRateReviewOpen(curr => !curr);
     }
 
     function updateFullRecipe(newRecipe: IRecipe) {
@@ -173,6 +179,7 @@ export default function Recipe() {
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
                                 toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}
                                 toggleMode={toggleMode}
+                                toggleRateReviewOpen={toggleIsRateReviewOpen}
                             />
                         </div>}
                     </Container>
@@ -187,6 +194,11 @@ export default function Recipe() {
                         open={isUploadNewPhotoOpen}
                         toggleClose={toggleIsUploadingNewPhotoOpen}
                         updatePhoto={updateRecipeCoverPhoto}
+                    />
+                    <RecipeRateReviewDialog
+                        open={isRateReviewOpen}
+                        toggleClose={toggleIsRateReviewOpen}
+                        initialData={{ isStarred: false }}
                     />
                 </>
             }
