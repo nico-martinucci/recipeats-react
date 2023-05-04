@@ -17,7 +17,7 @@ export interface IUser {
     email: string;
     bio?: string;
     isVerified: boolean;
-    favoritedRecipes: number[];
+    favoritedRecipes: Set<number>;
 }
 
 function App() {
@@ -53,9 +53,11 @@ function App() {
                 const { firstName, lastName, email, favoritedRecipes } = (await
                     RecipeatsApi.fetchUserData(username));
 
+                const favoritedRecipesLookup: Set<number> = new Set(favoritedRecipes);
+
                 const newUser = {
                     username, firstName, lastName, email, isVerified,
-                    favoritedRecipes
+                    favoritedRecipes: favoritedRecipesLookup
                 };
 
                 setUser(newUser);

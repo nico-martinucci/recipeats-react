@@ -200,7 +200,7 @@ export default function Recipe() {
                     <RecipeRateReviewDialog
                         open={isRateReviewOpen}
                         toggleClose={toggleIsRateReviewOpen}
-                        initialData={{ isStarred: user?.favoritedRecipes.includes(recipe?.id || -1) }}
+                        initialData={{ isStarred: user?.favoritedRecipes.has(recipe?.id || -1) }}
                     />
                 </>
             }
