@@ -3,13 +3,16 @@ import {
     DialogTitle, Stack, FormControl, InputLabel, Select, FormControlLabel,
     MenuItem, Checkbox
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import userContext from "./userContext";
+import RecipeatsApi from "./api";
 
 
 interface Props {
     open: boolean;
     toggleClose: () => void;
     initialData: IRateReviewEntryData;
+    recipeId: number;
 }
 
 interface IRateReviewEntryData {
@@ -23,7 +26,8 @@ const defaultData = {
 export default function RecipeRateReviewDialog({
     open,
     toggleClose,
-    initialData = defaultData
+    initialData = defaultData,
+    recipeId
 }: Props) {
     const [formData, setFormData] = useState<IRateReviewEntryData>(initialData);
 
@@ -39,6 +43,8 @@ export default function RecipeRateReviewDialog({
     //     }));
     // }
 
+    const user = useContext(userContext);
+
     console.log("initialData in RecipeRateReviewDialog", initialData)
 
     function handleCheckboxChange(evt: React.ChangeEvent<HTMLInputElement>) {
@@ -50,8 +56,32 @@ export default function RecipeRateReviewDialog({
         }))
     }
 
-    function handleSubmit(evt: React.MouseEvent) {
+    function handleToggleClose() {
+        toggleClose();
+    }
 
+    async function handleSubmit(evt: React.MouseEvent) {
+        if (formData.isStarred && !user?.favoritedRecipes.has(recipeId)) {
+            let newFavorite = await RecipeatsApi.favoriteRecipe(
+                user?.username,
+                recipeId
+            );
+
+            user?.updateFavorites(recipeId);
+
+            console.log("newFavorite api response in RecipeRateReviewDialog", newFavorite);
+        } else if (!formData.isStarred && user?.favoritedRecipes.has(recipeId)) {
+            let deletedFavorite = await RecipeatsApi.unfavoriteRecipe(
+                user?.username,
+                recipeId
+            );
+
+            user?.updateFavorites(recipeId);
+
+            console.log("deletedFavorite api response in RecipeRateReviewDialog", deletedFavorite);
+        }
+
+        handleToggleClose();
     }
 
     return (
@@ -74,7 +104,7 @@ export default function RecipeRateReviewDialog({
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={toggleClose}>Cancel</Button>
+                <Button onClick={handleToggleClose}>Cancel</Button>
                 <Button onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>

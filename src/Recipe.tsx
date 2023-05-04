@@ -201,6 +201,7 @@ export default function Recipe() {
                         open={isRateReviewOpen}
                         toggleClose={toggleIsRateReviewOpen}
                         initialData={{ isStarred: user?.favoritedRecipes.has(recipe?.id || -1) }}
+                        recipeId={recipe?.id || -1}
                     />
                 </>
             }
