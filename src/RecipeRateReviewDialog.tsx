@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface IRateReviewEntryData {
-    isStarred: boolean;
+    isStarred: boolean | undefined;
 }
 
 const defaultData = {
@@ -38,6 +38,8 @@ export default function RecipeRateReviewDialog({
     //         [name]: value,
     //     }));
     // }
+
+    console.log("initialData in RecipeRateReviewDialog", initialData)
 
     function handleCheckboxChange(evt: React.ChangeEvent<HTMLInputElement>) {
         const { name, checked } = evt.target;

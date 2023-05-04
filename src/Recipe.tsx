@@ -76,6 +76,8 @@ export default function Recipe() {
     const user = useContext(userContext);
     const { recipeId } = useParams();
 
+    console.log("user context in Recipe", user);
+
     useEffect(function () {
         async function getRecipe() {
             let recipe = await RecipeatsApi.getRecipeById(Number(recipeId));
@@ -198,7 +200,7 @@ export default function Recipe() {
                     <RecipeRateReviewDialog
                         open={isRateReviewOpen}
                         toggleClose={toggleIsRateReviewOpen}
-                        initialData={{ isStarred: false }}
+                        initialData={{ isStarred: user?.favoritedRecipes.includes(recipe?.id || -1) }}
                     />
                 </>
             }
