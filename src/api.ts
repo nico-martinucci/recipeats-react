@@ -100,7 +100,7 @@ export default class RecipeatsApi {
         return res.favoriteRecipes;
     }
 
-    static async favoriteRecipe(username: string, recipeId: number) {
+    static async favoriteRecipe(username: string | undefined, recipeId: number) {
         let res = await this.request(
             `users/${username}/favorites`,
             { recipeId },
@@ -110,7 +110,7 @@ export default class RecipeatsApi {
         return res.favorited;
     }
 
-    static async unfavoriteRecipe(username: string, recipeId: number) {
+    static async unfavoriteRecipe(username: string | undefined, recipeId: number) {
         let res = await this.request(
             `users/${username}/favorites/${recipeId}`,
             {},
