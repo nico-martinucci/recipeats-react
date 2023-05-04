@@ -17,6 +17,7 @@ export interface IUser {
     email: string;
     bio?: string;
     isVerified: boolean;
+    favoritedRecipes: number[];
 }
 
 function App() {
@@ -49,11 +50,14 @@ function App() {
 
             try {
 
-                const { firstName, lastName, email } = (await
+                const { firstName, lastName, email, favoritedRecipes } = (await
                     RecipeatsApi.fetchUserData(username));
 
-                const newUser = { username, firstName, lastName, email, isVerified };
-                console.log("email in useEffect in App", email)
+                const newUser = {
+                    username, firstName, lastName, email, isVerified,
+                    favoritedRecipes
+                };
+
                 setUser(newUser);
             } catch (err) {
 
