@@ -110,6 +110,8 @@ function App() {
         localStorage.setItem("recipeatsToken", token);
     }
 
+    if (isLoading) return <h1>Loading...</h1>
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
