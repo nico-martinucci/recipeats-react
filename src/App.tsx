@@ -18,6 +18,7 @@ export interface IUser {
     bio?: string;
     isVerified: boolean;
     favoritedRecipes: Set<number>;
+    updateFavorites: (recipeId: number) => void;
 }
 
 function App() {
@@ -57,7 +58,14 @@ function App() {
 
                 const newUser = {
                     username, firstName, lastName, email, isVerified,
-                    favoritedRecipes: favoritedRecipesLookup
+                    favoritedRecipes: favoritedRecipesLookup,
+                    updateFavorites(this: IUser, recipeId: number) {
+                        if (this.favoritedRecipes.has(recipeId)) {
+                            this.favoritedRecipes.delete(recipeId);
+                        } else {
+                            this.favoritedRecipes.add(recipeId);
+                        }
+                    }
                 };
 
                 setUser(newUser);
