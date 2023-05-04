@@ -94,6 +94,12 @@ export default class RecipeatsApi {
         return res.note;
     }
 
+    static async getFavoritedRecipes(username: string) {
+        let res = await this.request(`users/${username}/favorites`);
+
+        return res.favoriteRecipes;
+    }
+
     static async favoriteRecipe(username: string, recipeId: number) {
         let res = await this.request(
             `users/${username}/favorites`,
