@@ -94,6 +94,32 @@ export default class RecipeatsApi {
         return res.note;
     }
 
+    static async getFavoritedRecipes(username: string) {
+        let res = await this.request(`users/${username}/favorites`);
+
+        return res.favoriteRecipes;
+    }
+
+    static async favoriteRecipe(username: string | undefined, recipeId: number) {
+        let res = await this.request(
+            `users/${username}/favorites`,
+            { recipeId },
+            "post"
+        );
+
+        return res.favorited;
+    }
+
+    static async unfavoriteRecipe(username: string | undefined, recipeId: number) {
+        let res = await this.request(
+            `users/${username}/favorites/${recipeId}`,
+            {},
+            "delete"
+        );
+
+        return res.unfavorited;
+    }
+
     static async addRecipePhoto(photoData: FormData, recipeId: number) {
         let res = await this.request(
             `recipes/${recipeId}/photos`,

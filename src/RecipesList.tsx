@@ -1,7 +1,8 @@
 import RecipeatsApi from "./api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import RecipesListItem from "./RecipesListItem";
 import { Stack, Typography } from "@mui/material";
+import userContext from "./userContext";
 
 export interface IRecipeSummary {
     createdBy: string;
@@ -16,10 +17,22 @@ export interface IRecipeSummary {
 
 interface Props {
     recipes: IRecipeSummary[] | undefined;
-    isLoading: Boolean;
+    isLoading: boolean;
+    isShowingFavorites: boolean;
 }
 
-export default function RecipesList({ recipes, isLoading }: Props) {
+export default function RecipesList({ recipes, isLoading, isShowingFavorites }: Props) {
+
+    const user = useContext(userContext);
+
+    console.log("favorited recipes in RecipesList", user?.favoritedRecipes);
+    console.log("value of isShowingFavorites in RecipesList", isShowingFavorites);
+
+    let filteredRecipes = recipes ? [...recipes] : [];
+
+    if (isShowingFavorites) {
+        filteredRecipes = filteredRecipes.filter(r => user?.favoritedRecipes.has(r.id));
+    }
 
     if (isLoading) return <h1>Loading...</h1>
 
@@ -27,7 +40,7 @@ export default function RecipesList({ recipes, isLoading }: Props) {
         <div className="Recipes">
             <Typography variant="h1" gutterBottom>Recipes</Typography>
             <Stack gap={2}>
-                {recipes?.map(r => (<RecipesListItem key={r.id} recipe={r} />))}
+                {filteredRecipes?.map(r => (<RecipesListItem key={r.id} recipe={r} />))}
             </Stack>
         </div>
     )

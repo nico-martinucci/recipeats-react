@@ -2,16 +2,37 @@ import { useContext } from "react";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
+import StarRateIcon from '@mui/icons-material/StarRate';
 
 interface Props {
     showAddRecipeForm: () => void;
+    toggleIsShowingFavorites: () => void;
+    isShowingFavorites: boolean;
 }
 
-export default function RecipesHomeSpeedDial({ showAddRecipeForm }: Props) {
+export default function RecipesHomeSpeedDial({
+    showAddRecipeForm,
+    toggleIsShowingFavorites,
+    isShowingFavorites
+}: Props) {
     const actions = [
         { icon: <PostAddOutlinedIcon />, name: 'Add a Recipe', click: showAddRecipeForm },
-        { icon: <StarRateOutlinedIcon />, name: 'Show Favorites', click: () => { } },
+        // { icon: <StarRateOutlinedIcon />, name: 'Show Favorites', click: toggleIsShowingFavorites },
     ];
+
+    if (isShowingFavorites) {
+        actions.push({
+            icon: <StarRateIcon />,
+            name: 'Show All',
+            click: toggleIsShowingFavorites
+        })
+    } else {
+        actions.push({
+            icon: <StarRateOutlinedIcon />,
+            name: 'Show Favorites',
+            click: toggleIsShowingFavorites
+        })
+    }
 
     return (
         <SpeedDial

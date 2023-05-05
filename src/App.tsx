@@ -17,6 +17,8 @@ export interface IUser {
     email: string;
     bio?: string;
     isVerified: boolean;
+    favoritedRecipes: Set<number>;
+    updateFavorites: (recipeId: number) => void;
 }
 
 function App() {
@@ -49,11 +51,23 @@ function App() {
 
             try {
 
-                const { firstName, lastName, email } = (await
+                const { firstName, lastName, email, favoritedRecipes } = (await
                     RecipeatsApi.fetchUserData(username));
 
-                const newUser = { username, firstName, lastName, email, isVerified };
-                console.log("email in useEffect in App", email)
+                const favoritedRecipesLookup: Set<number> = new Set(favoritedRecipes);
+
+                const newUser = {
+                    username, firstName, lastName, email, isVerified,
+                    favoritedRecipes: favoritedRecipesLookup,
+                    updateFavorites(this: IUser, recipeId: number) {
+                        if (this.favoritedRecipes.has(recipeId)) {
+                            this.favoritedRecipes.delete(recipeId);
+                        } else {
+                            this.favoritedRecipes.add(recipeId);
+                        }
+                    }
+                };
+
                 setUser(newUser);
             } catch (err) {
 
@@ -105,6 +119,8 @@ function App() {
     function setLocalStorageToken(token: string) {
         localStorage.setItem("recipeatsToken", token);
     }
+
+    if (isLoading) return <h1>Loading...</h1>
 
     return (
         <ThemeProvider theme={theme}>

@@ -13,6 +13,7 @@ import RecipeAddForm from "./RecipeAddForm";
 import AddNewNoteDialog from "./AddNewNoteDialog";
 import userContext from "./userContext";
 import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
+import RecipeRateReviewDialog from "./RecipeRateReviewDialog";
 
 export interface IRecipeBasics {
     name?: string;
@@ -70,9 +71,12 @@ export default function Recipe() {
     const [mode, setMode] = useState<"add" | "edit" | "fork">("edit");
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
     const [isUploadNewPhotoOpen, setIsUploadNewPhotoOpen] = useState<boolean>(false);
+    const [isRateReviewOpen, setIsRateReviewOpen] = useState<boolean>(false);
 
     const user = useContext(userContext);
     const { recipeId } = useParams();
+
+    console.log("user context in Recipe", user);
 
     useEffect(function () {
         async function getRecipe() {
@@ -112,6 +116,10 @@ export default function Recipe() {
             ...curr,
             photoUrl: photoUrl
         }) as IRecipe)
+    }
+
+    function toggleIsRateReviewOpen() {
+        setIsRateReviewOpen(curr => !curr);
     }
 
     function updateFullRecipe(newRecipe: IRecipe) {
@@ -169,10 +177,12 @@ export default function Recipe() {
                         {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
                             <RecipeSpeedDial
                                 recipeAuthor={recipe?.createdBy}
+                                recipeId={recipe?.id || -1}
                                 toggleEditingOn={toggleEditing}
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
                                 toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}
                                 toggleMode={toggleMode}
+                                toggleRateReviewOpen={toggleIsRateReviewOpen}
                             />
                         </div>}
                     </Container>
@@ -187,6 +197,12 @@ export default function Recipe() {
                         open={isUploadNewPhotoOpen}
                         toggleClose={toggleIsUploadingNewPhotoOpen}
                         updatePhoto={updateRecipeCoverPhoto}
+                    />
+                    <RecipeRateReviewDialog
+                        open={isRateReviewOpen}
+                        toggleClose={toggleIsRateReviewOpen}
+                        initialData={{ isStarred: user?.favoritedRecipes.has(recipe?.id || -1) }}
+                        recipeId={recipe?.id || -1}
                     />
                 </>
             }

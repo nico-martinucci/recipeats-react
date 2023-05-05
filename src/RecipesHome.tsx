@@ -10,10 +10,11 @@ import userContext from "./userContext";
 import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
 
 export default function RecipesHome() {
-    const [isAddingRecipe, setIsAddingRecipe] = useState<Boolean>(false);
+    const [isAddingRecipe, setIsAddingRecipe] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [recipes, setRecipes] = useState<IRecipeSummary[]>();
-    const [isLoading, setIsLoading] = useState<Boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isShowingFavorites, setIsShowingFavorites] = useState<boolean>(false);
 
     const user = useContext(userContext);
 
@@ -39,14 +40,26 @@ export default function RecipesHome() {
         setSearchTerm(evt.target.value);
     }
 
+    function toggleIsShowingFavorites() {
+        setIsShowingFavorites(curr => !curr);
+    }
+
     return (
         <Container>
             {!isAddingRecipe &&
                 <>
                     <RecipeSearch searchTerm={searchTerm} changeSearchTerm={changeSearchTerm} />
-                    <RecipesList recipes={recipes} isLoading={isLoading} />
+                    <RecipesList
+                        recipes={recipes}
+                        isLoading={isLoading}
+                        isShowingFavorites={isShowingFavorites}
+                    />
                     {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                        <RecipesHomeSpeedDial showAddRecipeForm={showAddRecipeForm} />
+                        <RecipesHomeSpeedDial
+                            showAddRecipeForm={showAddRecipeForm}
+                            toggleIsShowingFavorites={toggleIsShowingFavorites}
+                            isShowingFavorites={isShowingFavorites}
+                        />
                     </div>}
                 </>
             }
