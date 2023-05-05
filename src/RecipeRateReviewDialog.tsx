@@ -61,28 +61,8 @@ export default function RecipeRateReviewDialog({
         toggleClose();
     }
 
-    async function handleSubmit(evt: React.MouseEvent) {
-        if (formData.isStarred && !user?.favoritedRecipes.has(recipeId)) {
-            let newFavorite = await RecipeatsApi.favoriteRecipe(
-                user?.username,
-                recipeId
-            );
-
-            user?.updateFavorites(recipeId);
-
-            console.log("newFavorite api response in RecipeRateReviewDialog", newFavorite);
-        } else if (!formData.isStarred && user?.favoritedRecipes.has(recipeId)) {
-            let deletedFavorite = await RecipeatsApi.unfavoriteRecipe(
-                user?.username,
-                recipeId
-            );
-
-            user?.updateFavorites(recipeId);
-
-            console.log("deletedFavorite api response in RecipeRateReviewDialog", deletedFavorite);
-        }
-
-        toggleClose();
+    function handleSubmit() {
+        // TODO: placeholder for future stuff on this dialog
     }
 
     return (
@@ -95,12 +75,12 @@ export default function RecipeRateReviewDialog({
                 </DialogContentText>
                 <form>
                     <Stack gap={2} sx={{ mb: 4 }}>
-                        <FormControlLabel control={<Checkbox
+                        {/* <FormControlLabel control={<Checkbox
                             id="isStarred"
                             name="isStarred"
                             checked={formData.isStarred}
                             onChange={handleCheckboxChange}
-                        />} label="Favorite?" />
+                        />} label="Favorite?" /> */}
                     </Stack>
                 </form>
             </DialogContent>
