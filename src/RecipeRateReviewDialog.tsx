@@ -56,7 +56,8 @@ export default function RecipeRateReviewDialog({
         }))
     }
 
-    function handleToggleClose() {
+    function handleCancel() {
+        setFormData(initialData);
         toggleClose();
     }
 
@@ -81,7 +82,7 @@ export default function RecipeRateReviewDialog({
             console.log("deletedFavorite api response in RecipeRateReviewDialog", deletedFavorite);
         }
 
-        handleToggleClose();
+        toggleClose();
     }
 
     return (
@@ -104,7 +105,7 @@ export default function RecipeRateReviewDialog({
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleToggleClose}>Cancel</Button>
+                <Button onClick={handleCancel}>Cancel</Button>
                 <Button onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
