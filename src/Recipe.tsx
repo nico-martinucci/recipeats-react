@@ -177,6 +177,7 @@ export default function Recipe() {
                         {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
                             <RecipeSpeedDial
                                 recipeAuthor={recipe?.createdBy}
+                                recipeId={recipe?.id || -1}
                                 toggleEditingOn={toggleEditing}
                                 toggleAddNoteOpen={toggleIsAddingNewNoteOpen}
                                 toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}

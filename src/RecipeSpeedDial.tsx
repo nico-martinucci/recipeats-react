@@ -1,15 +1,18 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
+import StarRateIcon from '@mui/icons-material/StarRate';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import userContext from "./userContext";
+import RecipeatsApi from "./api";
 
 interface Props {
     recipeAuthor: string | undefined;
+    recipeId: number;
     toggleEditingOn: () => void;
     toggleAddNoteOpen: () => void;
     toggleUploadPhotoOpen: () => void;
@@ -19,12 +22,14 @@ interface Props {
 
 export default function RecipeSpeedDial({
     recipeAuthor,
+    recipeId,
     toggleEditingOn,
     toggleAddNoteOpen,
     toggleUploadPhotoOpen,
     toggleMode,
     toggleRateReviewOpen
 }: Props) {
+    const [updateIcons, setUpdateIcons] = useState<boolean>(false);
 
     const user = useContext(userContext);
 
@@ -36,13 +41,23 @@ export default function RecipeSpeedDial({
                 toggleMode("fork");
                 toggleEditingOn();
             }
-        },
-        {
-            icon: <StarRateOutlinedIcon />,
-            name: "Rate/Review Recipe (coming soon)",
-            click: toggleRateReviewOpen
         }
     ];
+
+    if (user?.favoritedRecipes.has(recipeId)) {
+        generalActions.push({
+            icon: <StarRateIcon />,
+            name: "Unfavorite Recipe",
+            click: handleFavoriteClick
+        })
+    } else {
+        generalActions.push({
+            icon: <StarRateOutlinedIcon />,
+            name: "Favorite Recipe",
+            click: handleFavoriteClick
+        })
+    }
+
     const userActions = [
         {
             icon: <EditOutlinedIcon />,
@@ -55,6 +70,30 @@ export default function RecipeSpeedDial({
         { icon: <AddAPhotoOutlinedIcon />, name: 'Add Photo', click: toggleUploadPhotoOpen },
         { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];
+
+    async function handleFavoriteClick() {
+        if (!user?.favoritedRecipes.has(recipeId || -1)) {
+            let newFavorite = await RecipeatsApi.favoriteRecipe(
+                user?.username,
+                recipeId
+            );
+
+            user?.updateFavorites(recipeId);
+
+            console.log("newFavorite api response in RecipeRateReviewDialog", newFavorite);
+        } else {
+            let deletedFavorite = await RecipeatsApi.unfavoriteRecipe(
+                user?.username,
+                recipeId
+            );
+
+            user?.updateFavorites(recipeId);
+
+            console.log("deletedFavorite api response in RecipeRateReviewDialog", deletedFavorite);
+        }
+
+        setUpdateIcons(curr => !curr);
+    }
 
     return (
         <SpeedDial
