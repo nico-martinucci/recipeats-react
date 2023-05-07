@@ -51,6 +51,7 @@ export default function LoginForm({ login }: Props) {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
+                    required
                 />
                 <TextField
                     sx={{ minWidth: "100%" }}
@@ -61,6 +62,7 @@ export default function LoginForm({ login }: Props) {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
+                    required
                 />
                 <Stack direction="row" gap={2} my={2}>
                     <Button variant="outlined">Cancel</Button>
