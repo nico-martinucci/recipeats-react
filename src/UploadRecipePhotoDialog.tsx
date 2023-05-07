@@ -113,22 +113,32 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
         toggleClose();
     }
 
-    async function handleSubmit(evt: React.MouseEvent) {
-        evt.preventDefault();
+    async function handleSubmit() {
+        event?.preventDefault();
         setSubmitEvent(curr => !curr);
+    }
+
+    function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        console.log("event in handleKeyDown in add new ingredient dialog", event);
+
+        if (event?.key === "Enter") {
+            event?.preventDefault();
+            event?.stopPropagation();
+            handleSubmit();
+        }
     }
 
     return (
         <Dialog open={open} onClose={toggleClose}>
             <DialogTitle>Upload a Photo</DialogTitle>
-            {isLoading && <DialogContent>
-                <Typography variant="h1">Loading...</Typography>
-            </DialogContent>}
-            {!isLoading && <DialogContent>
-                <DialogContentText gutterBottom>
-                    Use the form below to upload a new photo for this recipe.
-                </DialogContentText>
-                <form>
+            <form onSubmit={handleSubmit}>
+                {isLoading && <DialogContent>
+                    <Typography variant="h1">Loading...</Typography>
+                </DialogContent>}
+                {!isLoading && <DialogContent>
+                    <DialogContentText gutterBottom>
+                        Use the form below to upload a new photo for this recipe.
+                    </DialogContentText>
                     <Stack gap={2} sx={{ mb: 4 }}>
                         <Button
                             component="label"
@@ -151,6 +161,7 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
                             name="caption"
                             value={formData.caption}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                         <FormControlLabel control={<Checkbox
                             id="makeCover"
@@ -159,14 +170,14 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
                             onChange={handleCheckboxChange}
                         />} label="Upload as new cover photo?" />
                     </Stack>
-                </form>
-            </DialogContent>}
-            <DialogActions>
-                {!isLoading && <>
-                    <Button onClick={handleToggleClose}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Submit</Button>
-                </>}
-            </DialogActions>
+                </DialogContent>}
+                <DialogActions>
+                    {!isLoading && <>
+                        <Button onClick={handleToggleClose}>Cancel</Button>
+                        <Button type="submit">Submit</Button>
+                    </>}
+                </DialogActions>
+            </form>
         </Dialog>
     )
 }
