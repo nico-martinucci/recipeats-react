@@ -42,7 +42,7 @@ export default function LoginForm({ login }: Props) {
     return (
         <Container>
             <Typography variant="h1">Log In</Typography>
-            <form>
+            <form onSubmit={handleLogin}>
                 <TextField
                     sx={{ minWidth: "100%" }}
                     label="Username"
@@ -64,7 +64,7 @@ export default function LoginForm({ login }: Props) {
                 />
                 <Stack direction="row" gap={2} my={2}>
                     <Button variant="outlined">Cancel</Button>
-                    <Button variant="contained" onClick={handleLogin}>Submit</Button>
+                    <Button variant="contained" type="submit">Submit</Button>
                 </Stack>
             </form>
 
