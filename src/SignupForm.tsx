@@ -66,6 +66,7 @@ export default function SignupForm({ signup }: Props) {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         sx={{ minWidth: "100%" }}
@@ -75,6 +76,7 @@ export default function SignupForm({ signup }: Props) {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         sx={{ minWidth: "100%" }}
@@ -84,6 +86,7 @@ export default function SignupForm({ signup }: Props) {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         sx={{ minWidth: "100%" }}
@@ -93,6 +96,7 @@ export default function SignupForm({ signup }: Props) {
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         sx={{ minWidth: "100%" }}
@@ -103,6 +107,7 @@ export default function SignupForm({ signup }: Props) {
                         type="password"
                         value={formData.password}
                         onChange={handleChange}
+                        required
                     />
                     <TextField
                         sx={{ minWidth: "100%" }}
@@ -113,6 +118,7 @@ export default function SignupForm({ signup }: Props) {
                         type="password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
+                        required
                     />
                     <Stack direction="row" gap={2} my={2}>
                         <Button variant="outlined">Cancel</Button>
