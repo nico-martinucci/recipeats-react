@@ -85,6 +85,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
                             value={formData.note}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
+                            required
                         />
                     </Stack>
                 </form>
