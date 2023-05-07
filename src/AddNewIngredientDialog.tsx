@@ -60,24 +60,34 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
         }));
     }
 
-    async function handleSubmit(evt: React.MouseEvent) {
+    async function handleSubmit() {
+        event?.preventDefault();
         const ingredient = await RecipeatsApi.addNewIngredient(formData);
         addLocalIngredient(ingredient);
         setFormData(initialData);
         toggleOpen();
     }
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        console.log("event in handleKeyDown in add new ingredient dialog", event);
+
+        if (event?.key === "Enter") {
+            event?.preventDefault();
+            event?.stopPropagation();
+            handleSubmit();
+        }
+    }
+
     return (
         <Dialog open={open} onClose={toggleOpen}>
             <DialogTitle>Add New Ingredient</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Please fill out the information below to add a new
-                    ingredient to the database.
-                </DialogContentText>
-                <form>
+            <form onSubmit={handleSubmit}>
+                <DialogContent>
+                    <DialogContentText>
+                        Please fill out the information below to add a new
+                        ingredient to the database.
+                    </DialogContentText>
                     <Stack gap={2} sx={{ mb: 4 }}>
-
                         <TextField
                             sx={{ minWidth: "100%" }}
                             label="Ingredient"
@@ -86,8 +96,8 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
-
                         <TextField
                             sx={{ minWidth: "100%" }}
                             label="Description"
@@ -97,8 +107,8 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
-
                         <FormControl variant="standard" sx={{ minWidth: "100%" }}>
                             <InputLabel id="category-select-label">Category</InputLabel>
                             <Select
@@ -108,6 +118,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                                 defaultValue=""
                                 value={formData.category}
                                 onChange={handleChange}
+                                onKeyDown={handleKeyDown}
                             >
                                 {categories?.map(c => (
                                     <MenuItem value={c.name} key={c.name}>
@@ -117,12 +128,12 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             </Select>
                         </FormControl>
                     </Stack>
-                </form>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={toggleOpen}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
-            </DialogActions>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={toggleOpen}>Cancel</Button>
+                    <Button type="submit">Submit</Button>
+                </DialogActions>
+            </form>
         </Dialog>
     );
 }
