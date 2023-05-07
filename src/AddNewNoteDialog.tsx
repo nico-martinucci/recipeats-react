@@ -42,7 +42,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
         }));
     }
 
-    async function handleSubmit(evt: React.MouseEvent) {
+    async function handleSubmit() {
         const noteData = {
             id: null,
             note: formData.note,
@@ -56,6 +56,16 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
         toggleClose();
     }
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        console.log("event in handleKeyDown in add new ingredient dialog", event);
+
+        if (event?.key === "Enter") {
+            event?.preventDefault();
+            event?.stopPropagation();
+            handleSubmit();
+        }
+    }
+
     return (
         <Dialog open={open} onClose={toggleClose}>
             <DialogTitle>Add New Note</DialogTitle>
@@ -63,7 +73,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
                 <DialogContentText>
                     This note will only be visible to the author of this recipe.
                 </DialogContentText>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <Stack gap={2} sx={{ mb: 4 }}>
                         <TextField
                             sx={{ minWidth: "100%" }}
@@ -74,13 +84,14 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
                             name="note"
                             value={formData.note}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </Stack>
                 </form>
             </DialogContent>
             <DialogActions>
                 <Button onClick={toggleClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <Button type="submit">Submit</Button>
             </DialogActions>
         </Dialog>
     )
