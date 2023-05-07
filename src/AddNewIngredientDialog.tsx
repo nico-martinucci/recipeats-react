@@ -97,6 +97,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             value={formData.name}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
+                            required
                         />
                         <TextField
                             sx={{ minWidth: "100%" }}
@@ -108,6 +109,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             value={formData.description}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
+                            required // FIXME: adding to match api/db - remove once not required there
                         />
                         <FormControl variant="standard" sx={{ minWidth: "100%" }}>
                             <InputLabel id="category-select-label">Category</InputLabel>
@@ -119,6 +121,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                                 value={formData.category}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
+                                required
                             >
                                 {categories?.map(c => (
                                     <MenuItem value={c.name} key={c.name}>
