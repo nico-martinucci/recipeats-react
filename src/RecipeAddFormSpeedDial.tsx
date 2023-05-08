@@ -5,6 +5,17 @@ interface Props {
     openAddIngredient: () => void;
 }
 
+/**
+ * RecipeAddFormSpeedDial: Speed dial of possible user actions for the recipe
+ * add form.
+ * 
+ * Props:
+ * - openAddIngredient: function to open the add ingredient dialog.
+ * 
+ * State: N/A
+ * 
+ * RecipeAddForm --> RecipeAddFormSpeedDial
+ */
 export default function RecipeAddFormSpeedDial({ openAddIngredient }: Props) {
     const actions = [
         { icon: <RestaurantOutlinedIcon />, name: 'Add Ingredient', click: openAddIngredient },
