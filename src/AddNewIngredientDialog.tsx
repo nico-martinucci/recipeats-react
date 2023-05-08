@@ -97,6 +97,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             value={formData.name}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
+                            required
                         />
                         <TextField
                             sx={{ minWidth: "100%" }}
@@ -119,6 +120,7 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                                 value={formData.category}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
+                                required
                             >
                                 {categories?.map(c => (
                                     <MenuItem value={c.name} key={c.name}>

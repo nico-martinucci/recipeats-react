@@ -254,8 +254,8 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
         setIngredients(curr => [...curr, ingredient]);
     }
 
-    function handleSubmitButtonClick(evt: React.MouseEvent) {
-        evt.preventDefault();
+    function handleSubmitButtonClick() {
+        event?.preventDefault();
 
         adjustRecipeForSubmit(formData, user?.username || "");
 
@@ -343,7 +343,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
         <div>
             <Button onClick={toggleFormOff}>Cancel</Button>
             <Typography variant="h1">{`${_.startCase(mode)} Recipe`}</Typography>
-            <form>
+            <form onSubmit={handleSubmitButtonClick}>
                 <Typography variant="h2" mt={3}>Recipe Basics</Typography>
                 <Stack gap={2} sx={{ mb: 4 }}>
 
@@ -356,6 +356,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                         value={formData.name}
                         onChange={handleChange}
                         disabled={mode === "edit"}
+                        required
                     />
 
                     <TextField
@@ -367,6 +368,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
+                        required
                     />
 
                     <FormControl variant="standard" sx={{ minWidth: "100%" }}>
@@ -378,6 +380,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                             defaultValue=""
                             value={formData.mealName}
                             onChange={handleChange}
+                            required
                         >
                             {meals?.map(m => (
                                 <MenuItem value={m.name} key={m.name}>
@@ -396,6 +399,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                             defaultValue=""
                             value={formData.typeName}
                             onChange={handleChange}
+                            required
                         >
                             {types?.map(t => (
                                 <MenuItem value={t.name} key={t.name}>
@@ -471,6 +475,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                             size="small"
                                             label="Ingredient"
                                             variant="standard"
+                                            required
                                         // value={{ label: i.ingredient?.toString() }}
                                         />}
                                     />
@@ -511,6 +516,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                 id={`steps-description-${idx}`}
                                 value={s.description}
                                 onChange={handleNestedChange}
+                                required
                             />
                             <IconButton
                                 id={`steps-${s.key}`}
@@ -537,6 +543,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                 id={`notes-note-${idx}`}
                                 value={n.note}
                                 onChange={handleNestedChange}
+                                required
                             />
                             <IconButton
                                 id={`notes-${n.key}`}
@@ -554,7 +561,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                     <Button
                         variant="contained"
                         sx={{ mt: 4 }}
-                        onClick={handleSubmitButtonClick}
+                        type="submit"
                     >
                         {mode === "add" && "Submit recipe"}
                         {mode === "edit" && "Save edits"}

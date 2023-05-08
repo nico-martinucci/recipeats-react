@@ -147,7 +147,7 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
                             sx={{ marginRight: "1rem" }}
                         >
                             Upload Photo
-                            <input type="file" accept=".jpg,.jpeg,.png" hidden onChange={handlePhotoChange} />
+                            <input type="file" accept=".jpg,.jpeg,.png" hidden onChange={handlePhotoChange} required />
                         </Button>
                         {previewPhotoUrl && (
                             <img src={previewPhotoUrl} alt="Preview" style={{ maxWidth: '100%' }} />
