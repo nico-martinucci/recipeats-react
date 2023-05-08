@@ -10,6 +10,20 @@ interface Props {
     isShowingFavorites: boolean;
 }
 
+/**
+ * RecipesHomeSpeedDial: Speed dial of possible user actions for the recipe home
+ * page (which defaults to the list of all recipes and search bar).
+ * 
+ * Props:
+ * - showAddRecipeForm: function to toggle showing the recipe add form
+ * - toggleIsShowingFavorites: function to toggle whether favorites are showing
+ *      or not
+ * - isShowingFavorites: whether favorites are being showed or not
+ * 
+ * State: N/A
+ * 
+ * RecipesHome --> RecipesHomeSpeedDial
+ */
 export default function RecipesHomeSpeedDial({
     showAddRecipeForm,
     toggleIsShowingFavorites,

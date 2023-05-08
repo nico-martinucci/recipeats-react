@@ -20,6 +20,25 @@ interface Props {
     toggleRateReviewOpen: () => void;
 }
 
+/**
+ * RecipeSpeedDial: Speep dial of possible user action for the currently opne
+ * recipe.
+ * 
+ * Props:
+ * - recipeAuthor: username of user that created the recipe
+ * - recipeId: id of currenly recipe
+ * - toggleEditingOn: function to toggle editing mode for the current recipe
+ * - toggleAddNoteOpen: function to toggle open the add note dialog
+ * - toggleUploadPhotoOpen: function to toggle open the add photo dialog
+ * - toggleMode: function to change the current recipe mode (edit, add, or fork)
+ * - toggleRateReviewOpen: function to toggle open the rate/review dialog
+ * 
+ * State: 
+ * - updateIcons: state to re-render component for icons that change on user
+ *      interaction
+ * 
+ * Recipe --> RecipeSpeedDial
+ */
 export default function RecipeSpeedDial({
     recipeAuthor,
     recipeId,

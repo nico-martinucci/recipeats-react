@@ -1,28 +1,28 @@
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
-import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
-
-interface Props {
-    openAddIngredient: () => void;
-}
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 
 /**
- * RecipeAddFormSpeedDial: Speed dial of possible user actions for the recipe
- * add form.
+ * UnverifiedUserSpeedDial: Placeholder speed dail component to display if a 
+ * user is logged in but is not yet verrified.
  * 
- * Props:
- * - openAddIngredient: function to open the add ingredient dialog.
+ * Props: N/A
  * 
  * State: N/A
  * 
- * RecipeAddForm --> RecipeAddFormSpeedDial
+ * RecipeHome | Recipe | RecipeAddForm -> UnverifiedUserSpeedDial
  */
-export default function RecipeAddFormSpeedDial({ openAddIngredient }: Props) {
+export default function UnverifiedUserSpeedDial() {
     const actions = [
-        { icon: <RestaurantOutlinedIcon />, name: 'Add Ingredient', click: openAddIngredient },
+        {
+            icon: <MarkEmailReadIcon />,
+            name: 'Verify your e-mail address to view user actions!',
+            click: () => { }
+        },
     ];
+
     return (
         <SpeedDial
-            ariaLabel="SpeedDial basic example"
+            ariaLabel="Unverified user speed dial"
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
             icon={<SpeedDialIcon />}
         >

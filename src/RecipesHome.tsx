@@ -8,7 +8,24 @@ import { IRecipeSummary } from "./RecipesList";
 import RecipeatsApi from "./api";
 import userContext from "./userContext";
 import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
+import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
 
+/**
+ * RecipesHome: Container component for recipes, including list of recipes and
+ * add new recipe form.
+ * 
+ * Props: N/A
+ * 
+ * State:
+ * - isAddingRecipe: whether add recipe form is showing or not
+ * - searchTerm: currently entered search term; updates on entry
+ * - recipes: list of recipes pulled from api
+ * - isLoading: loading state for api call
+ * - isShowingFavorites: whether just favorites or all recipes should be shown
+ * 
+ * RoutesList -> RecipesHome -> RecipeSearch | RecipesList | 
+ *      RecipesHomeSpeedDial | RecipeAddForm
+ */
 export default function RecipesHome() {
     const [isAddingRecipe, setIsAddingRecipe] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -55,12 +72,16 @@ export default function RecipesHome() {
                         isShowingFavorites={isShowingFavorites}
                     />
                     {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                        <RecipesHomeSpeedDial
-                            showAddRecipeForm={showAddRecipeForm}
-                            toggleIsShowingFavorites={toggleIsShowingFavorites}
-                            isShowingFavorites={isShowingFavorites}
-                        />
+                        {user?.isVerified &&
+                            <RecipesHomeSpeedDial
+                                showAddRecipeForm={showAddRecipeForm}
+                                toggleIsShowingFavorites={toggleIsShowingFavorites}
+                                isShowingFavorites={isShowingFavorites}
+                            />
+                        }
+                        {!user?.isVerified && <UnverifiedUserSpeedDial />}
                     </div>}
+
                 </>
             }
             {isAddingRecipe &&
