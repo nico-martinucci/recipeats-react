@@ -14,6 +14,7 @@ import AddNewNoteDialog from "./AddNewNoteDialog";
 import userContext from "./userContext";
 import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
 import RecipeRateReviewDialog from "./RecipeRateReviewDialog";
+import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
 
 export interface IRecipeBasics {
     name?: string;
@@ -175,7 +176,7 @@ export default function Recipe() {
                             </CardActions>
                         </Card>
                         {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                            <RecipeSpeedDial
+                            {user?.isVerified && <RecipeSpeedDial
                                 recipeAuthor={recipe?.createdBy}
                                 recipeId={recipe?.id || -1}
                                 toggleEditingOn={toggleEditing}
@@ -183,7 +184,8 @@ export default function Recipe() {
                                 toggleUploadPhotoOpen={toggleIsUploadingNewPhotoOpen}
                                 toggleMode={toggleMode}
                                 toggleRateReviewOpen={toggleIsRateReviewOpen}
-                            />
+                            />}
+                            {!user?.isVerified && <UnverifiedUserSpeedDial />}
                         </div>}
                     </Container>
                     <AddNewNoteDialog

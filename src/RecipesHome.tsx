@@ -8,6 +8,7 @@ import { IRecipeSummary } from "./RecipesList";
 import RecipeatsApi from "./api";
 import userContext from "./userContext";
 import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
+import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
 
 /**
  * RecipesHome: Container component for recipes, including list of recipes and
@@ -71,12 +72,16 @@ export default function RecipesHome() {
                         isShowingFavorites={isShowingFavorites}
                     />
                     {user && <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                        <RecipesHomeSpeedDial
-                            showAddRecipeForm={showAddRecipeForm}
-                            toggleIsShowingFavorites={toggleIsShowingFavorites}
-                            isShowingFavorites={isShowingFavorites}
-                        />
+                        {user?.isVerified &&
+                            <RecipesHomeSpeedDial
+                                showAddRecipeForm={showAddRecipeForm}
+                                toggleIsShowingFavorites={toggleIsShowingFavorites}
+                                isShowingFavorites={isShowingFavorites}
+                            />
+                        }
+                        {!user?.isVerified && <UnverifiedUserSpeedDial />}
                     </div>}
+
                 </>
             }
             {isAddingRecipe &&
