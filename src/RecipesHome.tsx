@@ -9,6 +9,22 @@ import RecipeatsApi from "./api";
 import userContext from "./userContext";
 import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
 
+/**
+ * RecipesHome: Container component for recipes, including list of recipes and
+ * add new recipe form.
+ * 
+ * Props: N/A
+ * 
+ * State:
+ * - isAddingRecipe: whether add recipe form is showing or not
+ * - searchTerm: currently entered search term; updates on entry
+ * - recipes: list of recipes pulled from api
+ * - isLoading: loading state for api call
+ * - isShowingFavorites: whether just favorites or all recipes should be shown
+ * 
+ * RoutesList -> RecipesHome -> RecipeSearch | RecipesList | 
+ *      RecipesHomeSpeedDial | RecipeAddForm
+ */
 export default function RecipesHome() {
     const [isAddingRecipe, setIsAddingRecipe] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
