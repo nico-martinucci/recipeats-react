@@ -109,7 +109,6 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
                             value={formData.description}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            required // FIXME: adding to match api/db - remove once not required there
                         />
                         <FormControl variant="standard" sx={{ minWidth: "100%" }}>
                             <InputLabel id="category-select-label">Category</InputLabel>

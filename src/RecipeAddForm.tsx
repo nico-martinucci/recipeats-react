@@ -431,7 +431,6 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                         value={i.amount}
                                         onChange={handleNestedChange}
                                         size="small"
-                                        required // FIXME: adding to match api/db - remove once those are fixed
                                         inputProps={{
                                             type: 'number',
                                             pattern: '[0-9]*' // allows only digits
