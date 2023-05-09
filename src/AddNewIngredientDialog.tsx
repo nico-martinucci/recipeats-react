@@ -106,7 +106,7 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
     }
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open} onClose={handleToggleClose}>
             <DialogTitle>Add New Ingredient</DialogTitle>
             <form onSubmit={handleSubmit}>
                 <DialogContent>
