@@ -9,6 +9,9 @@ import StarRateIcon from '@mui/icons-material/StarRate';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import userContext from "./userContext";
 import RecipeatsApi from "./api";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
     recipeAuthor: string | undefined;
@@ -90,6 +93,9 @@ export default function RecipeSpeedDial({
         { icon: <PostAddOutlinedIcon />, name: 'Add Note', click: toggleAddNoteOpen },
     ];
 
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     async function handleFavoriteClick() {
         if (!user?.favoritedRecipes.has(recipeId || -1)) {
             let newFavorite = await RecipeatsApi.favoriteRecipe(
@@ -120,16 +126,20 @@ export default function RecipeSpeedDial({
                 <SpeedDialAction
                     key={action.name}
                     icon={action.icon}
+                    tooltipOpen={isMobile}
                     tooltipTitle={action.name}
                     onClick={action.click}
+                    sx={{ typography: { whiteSpace: 'nowrap' } }}
                 />
             ))}
             {recipeAuthor === user?.username && userActions.map((action) => (
                 <SpeedDialAction
                     key={action.name}
                     icon={action.icon}
+                    tooltipOpen={isMobile}
                     tooltipTitle={action.name}
                     onClick={action.click}
+                    sx={{ typography: { whiteSpace: 'nowrap' } }}
                 />
             ))}
         </SpeedDial>

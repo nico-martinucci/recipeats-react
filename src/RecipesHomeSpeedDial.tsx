@@ -3,6 +3,9 @@ import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
 import StarRateIcon from '@mui/icons-material/StarRate';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
     showAddRecipeForm: () => void;
@@ -31,7 +34,6 @@ export default function RecipesHomeSpeedDial({
 }: Props) {
     const actions = [
         { icon: <PostAddOutlinedIcon />, name: 'Add a Recipe', click: showAddRecipeForm },
-        // { icon: <StarRateOutlinedIcon />, name: 'Show Favorites', click: toggleIsShowingFavorites },
     ];
 
     if (isShowingFavorites) {
@@ -48,6 +50,9 @@ export default function RecipesHomeSpeedDial({
         })
     }
 
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <SpeedDial
             ariaLabel="SpeedDial basic example"
@@ -58,8 +63,10 @@ export default function RecipesHomeSpeedDial({
                 <SpeedDialAction
                     key={action.name}
                     icon={action.icon}
+                    tooltipOpen={isMobile}
                     tooltipTitle={action.name}
                     onClick={action.click}
+                    sx={{ typography: { whiteSpace: 'nowrap' } }}
                 />
             ))}
         </SpeedDial>
