@@ -596,7 +596,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
             </div>
             <AddNewIngredientDialog
                 open={isAddNewIngredientOpen}
-                toggleOpen={toggleIsAddingNewIngredientOpen}
+                toggleClose={toggleIsAddingNewIngredientOpen}
                 addLocalIngredient={addNewIngredientToLocalList}
             />
         </div >
