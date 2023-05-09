@@ -31,6 +31,23 @@ const initialData = {
     category: ""
 }
 
+/**
+ * AddNewIngredientDialog: dialog to add a new ingredient to the database.
+ * 
+ * Props:
+ * - open: whether or not the dialog should currently be showing
+ * - toggleOpen: function to change the value of open, closing the dialog
+ * - addLocalIngredient: function to add an ingredient posted to the API to the
+ *      locally stored list of available ingredients, making it available for
+ *      immediate use without another API call.
+ * 
+ * State:
+ * - formData: controlled form component value state
+ * - categories: list of ingredient category options
+ * - isCategoriesLoading: whether or not categories list has loaded
+ * 
+ * RecipeAddForm -> AddNewIngredientDialog
+ */
 export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngredient }: Props) {
     const [formData, setFormData] = useState<INewIngredientEntryData>(initialData);
     const [categories, setCategories] = useState<ICategory[]>();
