@@ -1,0 +1,1 @@
+export const FORM_CLEAR_DELAY_MSECS = 200;
