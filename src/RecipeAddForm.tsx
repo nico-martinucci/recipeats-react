@@ -69,6 +69,32 @@ const initialData = {
     notes: []
 }
 
+/**
+ * RecipeAddForm: Form for adding, editing, and forking recipes.
+ * 
+ * Props:
+ * - data: initial data to populate form with
+ * - toggleFormOff: parent function to exit out of form, back to recipe
+ * - mode: whether the form is in "add", "edit", or "fork" mode
+ * - recipeId: recipeId for current recipe (0 if new recipe)
+ * - updateFullRecipe: function to update all recipe data with the provided
+ *      recipe data
+ * 
+ * State: 
+ * - formData: controlled form component value tracking
+ * - meals: list of possible meal options
+ * - isMealsLoading: whether or not meals list has loaded yet
+ * - types: list of possible recipe types
+ * - isTypesLoading: whether or not types list has loaded yet
+ * - units: list of possible units
+ * - isUnitsLoading: whether or not units list has loaded yet
+ * - ingredients: list of possible ingredient choices
+ * - isIngredientsLoading: whether or not ingredients list has loaded yet
+ * - isAddNewIngredientOpen: boolean controlling open state of add ingredient
+ *      dialog
+ * 
+ * Recipe -> RecipeAddForm -> RecipeAddFormSpeedDial, (AddNewIngredientDialog)
+ */
 export default function RecipeAddForm({ data = initialData, toggleFormOff, toggleMode, mode, recipeId = 0, updateFullRecipe }: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
@@ -570,7 +596,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
             </div>
             <AddNewIngredientDialog
                 open={isAddNewIngredientOpen}
-                toggleOpen={toggleIsAddingNewIngredientOpen}
+                toggleClose={toggleIsAddingNewIngredientOpen}
                 addLocalIngredient={addNewIngredientToLocalList}
             />
         </div >
