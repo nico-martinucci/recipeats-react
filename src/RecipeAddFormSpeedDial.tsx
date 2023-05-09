@@ -1,5 +1,8 @@
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
     openAddIngredient: () => void;
@@ -20,6 +23,10 @@ export default function RecipeAddFormSpeedDial({ openAddIngredient }: Props) {
     const actions = [
         { icon: <RestaurantOutlinedIcon />, name: 'Add Ingredient', click: openAddIngredient },
     ];
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <SpeedDial
             ariaLabel="SpeedDial basic example"
@@ -30,8 +37,10 @@ export default function RecipeAddFormSpeedDial({ openAddIngredient }: Props) {
                 <SpeedDialAction
                     key={action.name}
                     icon={action.icon}
+                    tooltipOpen={isMobile}
                     tooltipTitle={action.name}
                     onClick={action.click}
+                    sx={{ typography: { whiteSpace: 'nowrap' } }}
                 />
             ))}
         </SpeedDial>
