@@ -17,7 +17,6 @@ function changeAmountsToNumberType(recipe: IRecipe) {
 }
 
 function addOrderToItemsAndSteps(recipe: IRecipe) {
-    console.log("recipe", recipe);
     for (let i = 0; i < recipe.items.length; i++) {
         recipe.items[i].order = i + 1;
     }

@@ -25,9 +25,6 @@ export default function RecipesList({ recipes, isLoading, isShowingFavorites }: 
 
     const user = useContext(userContext);
 
-    console.log("favorited recipes in RecipesList", user?.favoritedRecipes);
-    console.log("value of isShowingFavorites in RecipesList", isShowingFavorites);
-
     let filteredRecipes = recipes ? [...recipes] : [];
 
     if (isShowingFavorites) {

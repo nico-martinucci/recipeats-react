@@ -69,8 +69,6 @@ export default function AddNewIngredientDialog({ open, toggleOpen, addLocalIngre
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("event in handleKeyDown in add new ingredient dialog", event);
-
         if (event?.key === "Enter") {
             event?.preventDefault();
             event?.stopPropagation();

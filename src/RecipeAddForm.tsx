@@ -83,8 +83,6 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
     const [isIngredientsLoading, setIsIngredientsLoading] = useState<boolean>(true);
     const [isAddNewIngredientOpen, setIsAddNewIngredientOpen] = useState<boolean>(false);
 
-    // console.log("form data at top of recipe add form", formData);
-
     const navigate = useNavigate();
     const user = useContext(userContext);
 
@@ -273,8 +271,6 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
         } else {
             newRecipe = await RecipeatsApi.addNewRecipe(formData);
         }
-
-        console.log("newRecipe in addNewRecipe func in add form", newRecipe);
 
         let notePromises = [];
 
