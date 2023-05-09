@@ -93,9 +93,8 @@ function App() {
      * page doesn't redirect.
      */
     async function login(data: ILoginFormData) {
-        console.log("login data", data);
         const newToken = await RecipeatsApi.loginUser(data);
-        console.log("token", newToken)
+
         setToken(newToken);
     }
 
@@ -105,9 +104,8 @@ function App() {
      * so that page doesn't redirect. 
      */
     async function signup(data: ISignupFormData) {
-        console.log("signup data", data);
         const newToken = await RecipeatsApi.signupUser(data);
-        console.log("token", newToken);
+
         setToken(newToken);
     }
 

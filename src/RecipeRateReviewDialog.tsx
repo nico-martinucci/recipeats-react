@@ -45,8 +45,6 @@ export default function RecipeRateReviewDialog({
 
     const user = useContext(userContext);
 
-    console.log("initialData in RecipeRateReviewDialog", initialData)
-
     function handleCheckboxChange(evt: React.ChangeEvent<HTMLInputElement>) {
         const { name, checked } = evt.target;
 

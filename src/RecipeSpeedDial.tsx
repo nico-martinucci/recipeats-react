@@ -98,8 +98,6 @@ export default function RecipeSpeedDial({
             );
 
             user?.updateFavorites(recipeId);
-
-            console.log("newFavorite api response in RecipeRateReviewDialog", newFavorite);
         } else {
             let deletedFavorite = await RecipeatsApi.unfavoriteRecipe(
                 user?.username,
@@ -107,8 +105,6 @@ export default function RecipeSpeedDial({
             );
 
             user?.updateFavorites(recipeId);
-
-            console.log("deletedFavorite api response in RecipeRateReviewDialog", deletedFavorite);
         }
 
         setUpdateIcons(curr => !curr);

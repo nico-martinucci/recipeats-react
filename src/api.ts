@@ -56,7 +56,6 @@ export default class RecipeatsApi {
 
     static async loginUser(data: ILoginFormData) {
         let res = await this.request("users/login", data, "post");
-        console.log("res in loginUser static method", res);
         return res.token
     }
 

@@ -49,16 +49,15 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
             username: user?.username,
             key: _.uniqueId(),
         }
-        console.log("noteData in handleSubmit in add new note dialog:", noteData);
+
         const note = await RecipeatsApi.addNoteToRecipe(noteData, recipeId || 0);
+
         addLocalNote(noteData);
         setFormData(initialData);
         toggleClose();
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("event in handleKeyDown in add new ingredient dialog", event);
-
         if (event?.key === "Enter") {
             event?.preventDefault();
             event?.stopPropagation();
