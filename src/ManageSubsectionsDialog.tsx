@@ -61,18 +61,6 @@ export default function ManageSubsectionsDialog({
 
     const user = useContext(userContext);
 
-    function handleChange(
-        evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
-            HTMLTextAreaElement>)
-    ) {
-        const { name, value } = evt.target;
-
-        setFormData((curr) => ({
-            ...curr,
-            [name]: value,
-        }));
-    }
-
     function handleNestedChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) {
@@ -123,6 +111,13 @@ export default function ManageSubsectionsDialog({
         updateSubsections(formData.subsections);
         removeDeletedSubsectionsFromItems(formData.subsections);
         toggleClose();
+    }
+
+    function handleToggleClose() {
+        toggleClose();
+        setTimeout(() => {
+            setFormData({ subsections });
+        }, FORM_CLEAR_DELAY_MSECS)
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -177,7 +172,7 @@ export default function ManageSubsectionsDialog({
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={toggleClose}>Cancel</Button>
+                <Button onClick={handleToggleClose}>Cancel</Button>
                 <Button type="submit" onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
