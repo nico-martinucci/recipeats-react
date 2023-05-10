@@ -15,6 +15,7 @@ import { adjustRecipeForSubmit } from "./helpers/recipeSubmit"
 import RecipeAddFormSpeedDial from "./RecipeAddFormSpeedDial";
 import AddNewIngredientDialog from "./AddNewIngredientDialog";
 import userContext from "./userContext";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface IRecipeEntryData {
     name: string;
@@ -358,7 +359,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
     if (isMealsLoading || isTypesLoading ||
         isUnitsLoading || isIngredientsLoading
     ) {
-        return <h1>Loading...</h1>
+        return <LoadingSpinner />
     }
 
     return (
