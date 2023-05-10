@@ -296,6 +296,23 @@ export default function RecipeAddForm({
         setIngredients(curr => [...curr, ingredient]);
     }
 
+    function removeDeletedSubsectionsFromItems(newSubsections: ISubsection[]) {
+        console.log("current subsections", newSubsections);
+
+        const subsectionNames = new Set(newSubsections.map(s => s.subsection));
+        setFormData(curr => ({
+            ...curr,
+            items: curr.items.map(i => {
+                if (i.subsection && subsectionNames.has(i.subsection)) return i;
+
+                return {
+                    ...i,
+                    subsection: ""
+                }
+            })
+        }))
+    }
+
     function handleSubmitButtonClick() {
         event?.preventDefault();
 
@@ -542,7 +559,6 @@ export default function RecipeAddForm({
                                         <FormControl variant="standard" sx={{ minWidth: "100%" }}>
                                             <InputLabel id="type-select-label">Subsection</InputLabel>
                                             <Select
-
                                                 labelId="subsection-select-label"
                                                 fullWidth
                                                 name={`items-subsection-${idx}`}
@@ -550,6 +566,7 @@ export default function RecipeAddForm({
                                                 value={i.subsection?.toString()}
                                                 onChange={handleNestedChange}
                                                 size="small"
+                                                required
                                             >
                                                 {subsections?.map(s => (
                                                     <MenuItem
@@ -659,6 +676,7 @@ export default function RecipeAddForm({
                 toggleClose={toggleIsManageSubsectionsOpen}
                 subsections={subsections}
                 updateSubsections={updateSubsections}
+                removeDeletedSubsectionsFromItems={removeDeletedSubsectionsFromItems}
             />
         </div >
     )

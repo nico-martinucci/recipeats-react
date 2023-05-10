@@ -19,6 +19,7 @@ interface Props {
     toggleClose: () => void;
     subsections: ISubsection[];
     updateSubsections: (subsections: ISubsection[]) => void;
+    removeDeletedSubsectionsFromItems: (subsections: ISubsection[]) => void;
 }
 
 
@@ -53,7 +54,8 @@ export default function ManageSubsectionsDialog({
     open,
     toggleClose,
     subsections = sampleSubsections,
-    updateSubsections
+    updateSubsections,
+    removeDeletedSubsectionsFromItems
 }: Props) {
     const [formData, setFormData] = useState<ISubsectionEntryData>({ subsections });
 
@@ -119,6 +121,7 @@ export default function ManageSubsectionsDialog({
 
     async function handleSubmit() {
         updateSubsections(formData.subsections);
+        removeDeletedSubsectionsFromItems(formData.subsections);
         toggleClose();
     }
 
