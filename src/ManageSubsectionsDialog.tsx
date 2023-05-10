@@ -107,7 +107,7 @@ export default function ManageSubsectionsDialog({
         }))
     }
 
-    async function handleSubmit() {
+    function handleSubmit() {
         updateSubsections(formData.subsections);
         removeDeletedSubsectionsFromItems(formData.subsections);
         toggleClose();
