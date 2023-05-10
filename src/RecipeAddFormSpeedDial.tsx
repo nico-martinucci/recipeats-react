@@ -1,11 +1,13 @@
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import RestaurantOutlinedIcon from '@mui/icons-material/RestaurantOutlined';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
     openAddIngredient: () => void;
+    openAddSubsection: () => void;
 }
 
 /**
@@ -19,9 +21,18 @@ interface Props {
  * 
  * RecipeAddForm --> RecipeAddFormSpeedDial
  */
-export default function RecipeAddFormSpeedDial({ openAddIngredient }: Props) {
+export default function RecipeAddFormSpeedDial({ openAddIngredient, openAddSubsection }: Props) {
     const actions = [
-        { icon: <RestaurantOutlinedIcon />, name: 'Add Ingredient', click: openAddIngredient },
+        {
+            icon: <RestaurantOutlinedIcon />,
+            name: 'Add Ingredient',
+            click: openAddIngredient
+        },
+        {
+            icon: <PlaylistAddIcon />,
+            name: 'Add Subsection',
+            click: openAddSubsection
+        }
     ];
 
     const theme = useTheme();
