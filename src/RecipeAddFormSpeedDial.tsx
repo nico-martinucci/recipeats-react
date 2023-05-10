@@ -16,6 +16,7 @@ interface Props {
  * 
  * Props:
  * - openAddIngredient: function to open the add ingredient dialog.
+ * - openAddSubsection: function to open the add subsection dialog.
  * 
  * State: N/A
  * 
