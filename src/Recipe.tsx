@@ -172,7 +172,7 @@ export default function Recipe() {
                                         <Typography variant="subtitle1">{recipe?.description}</Typography>
                                     </Grid2>
                                     <Grid2 xs={12} md={6}>
-                                        <Typography variant="h2">Ingredients</Typography>
+                                        <Typography variant="h2" gutterBottom>Ingredients</Typography>
                                         {subsections.length === 0 &&
                                             <ul>
                                                 {recipe?.items.map(i => (
@@ -182,14 +182,14 @@ export default function Recipe() {
                                         }
                                         {subsections.length > 0 && <>
                                             {subsections.map(s => (
-                                                <>
+                                                <div key={s.key}>
                                                     <Typography variant="h3">{s.subsection}</Typography>
                                                     <ul>
                                                         {recipe?.items.filter(i => i.subsection === s.subsection).map(i => (
                                                             <RecipeItem key={i.order} item={i} />
                                                         ))}
                                                     </ul>
-                                                </>
+                                                </div>
                                             ))}
                                         </>}
                                     </Grid2>
