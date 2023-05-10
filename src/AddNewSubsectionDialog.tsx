@@ -10,6 +10,7 @@ import userContext from "./userContext";
 import _ from "lodash";
 import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 
 
 interface Props {
@@ -119,18 +120,11 @@ export default function AddNewSubsectionDialog({
     }
 
     async function handleSubmit() {
-        // const noteData = {
-        //     id: null,
-        //     note: formData.note,
-        //     username: user?.username,
-        //     key: _.uniqueId(),
-        // }
-
-        // const note = await RecipeatsApi.addNoteToRecipe(noteData, recipeId || 0);
-
-        // addLocalNote(noteData);
-        // setFormData(initialData);
+        updateSubsections(formData.subsections.map(s => s.subsection));
         toggleClose();
+        setTimeout(() => {
+            setFormData({ subsections: [] });
+        }, FORM_CLEAR_DELAY_MSECS)
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
