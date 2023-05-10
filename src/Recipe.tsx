@@ -102,7 +102,7 @@ export default function Recipe() {
             const subsections = Array.from(uniqueSubsections).map(s => ({
                 subsection: s || "",
                 key: _.uniqueId("Recipe")
-            }))
+            })).filter(s => s.subsection !== "")
 
             setSubsections(subsections);
         }
@@ -173,11 +173,25 @@ export default function Recipe() {
                                     </Grid2>
                                     <Grid2 xs={12} md={6}>
                                         <Typography variant="h2">Ingredients</Typography>
-                                        <ul>
-                                            {recipe?.items.map(i => (
-                                                <RecipeItem key={i.order} item={i} />
+                                        {subsections.length === 0 &&
+                                            <ul>
+                                                {recipe?.items.map(i => (
+                                                    <RecipeItem key={i.order} item={i} />
+                                                ))}
+                                            </ul>
+                                        }
+                                        {subsections.length > 0 && <>
+                                            {subsections.map(s => (
+                                                <>
+                                                    <Typography variant="h3">{s.subsection}</Typography>
+                                                    <ul>
+                                                        {recipe?.items.filter(i => i.subsection === s.subsection).map(i => (
+                                                            <RecipeItem key={i.order} item={i} />
+                                                        ))}
+                                                    </ul>
+                                                </>
                                             ))}
-                                        </ul>
+                                        </>}
                                     </Grid2>
                                     <Grid2 xs={12} md={6}>
                                         <Typography variant="h2">Steps</Typography>
