@@ -51,7 +51,7 @@ const sampleSubsections = [
 /**
  * 
  */
-export default function AddNewSubsectionDialog({
+export default function ManageSubsectionsDialog({
     open,
     toggleClose,
     subsections = sampleSubsections,
