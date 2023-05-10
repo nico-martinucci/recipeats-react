@@ -120,9 +120,6 @@ export default function ManageSubsectionsDialog({
     async function handleSubmit() {
         updateSubsections(formData.subsections);
         toggleClose();
-        setTimeout(() => {
-            setFormData({ subsections: [] });
-        }, FORM_CLEAR_DELAY_MSECS)
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
