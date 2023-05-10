@@ -99,7 +99,7 @@ const initialData = {
  * - isManageSubsectionsOpen: boolean controlling open state of manage
  *      subsections dialog
  * 
- * Recipe -> RecipeAddForm -> RecipeAddFormSpeedDial, (AddNewIngredientDialog)
+ * RecipesHome | Recipe -> RecipeAddForm -> RecipeAddFormSpeedDial, (AddNewIngredientDialog)
  */
 export default function RecipeAddForm({
     data = initialData,
