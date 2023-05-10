@@ -11,19 +11,17 @@ import _ from "lodash";
 import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
+import { ISubsection } from "./Recipe"
 
 
 interface Props {
     open: boolean;
     toggleClose: () => void;
     subsections: ISubsection[];
-    updateSubsections: (subsections: string[]) => void;
+    updateSubsections: (subsections: ISubsection[]) => void;
 }
 
-interface ISubsection {
-    key: string;
-    subsection: string;
-}
+
 
 interface ISubsectionEntryData {
     subsections: ISubsection[];
@@ -120,7 +118,7 @@ export default function ManageSubsectionsDialog({
     }
 
     async function handleSubmit() {
-        updateSubsections(formData.subsections.map(s => s.subsection));
+        updateSubsections(formData.subsections);
         toggleClose();
         setTimeout(() => {
             setFormData({ subsections: [] });
@@ -180,7 +178,7 @@ export default function ManageSubsectionsDialog({
             </DialogContent>
             <DialogActions>
                 <Button onClick={toggleClose}>Cancel</Button>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
     )
