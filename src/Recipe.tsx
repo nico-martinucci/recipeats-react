@@ -16,6 +16,7 @@ import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
 import RecipeRateReviewDialog from "./RecipeRateReviewDialog";
 import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
 import LoadingSpinner from "./LoadingSpinner";
+import _ from "lodash";
 
 export interface IRecipeBasics {
     name?: string;
@@ -35,6 +36,7 @@ export interface IRecipeItem {
     order: number | null;
     unit: string | null;
     key: string;
+    subsection: string | null;
 }
 
 export interface IRecipeStep {
@@ -66,6 +68,11 @@ export interface IRecipe {
     forkedFrom?: number;
 }
 
+export interface ISubsection {
+    key: string;
+    subsection: string;
+}
+
 export default function Recipe() {
     const [recipe, setRecipe] = useState<IRecipe>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -74,6 +81,7 @@ export default function Recipe() {
     const [isAddNewNoteOpen, setIsAddNewNoteOpen] = useState<boolean>(false);
     const [isUploadNewPhotoOpen, setIsUploadNewPhotoOpen] = useState<boolean>(false);
     const [isRateReviewOpen, setIsRateReviewOpen] = useState<boolean>(false);
+    const [subsections, setSubsections] = useState<ISubsection[]>([]);
 
     const user = useContext(userContext);
     const { recipeId } = useParams();
@@ -87,6 +95,20 @@ export default function Recipe() {
 
         getRecipe();
     }, [])
+
+    useEffect(function getSubsections() {
+        if (recipe) {
+            const uniqueSubsections = new Set(recipe.items.map(i => i.subsection));
+            const subsections = Array.from(uniqueSubsections).map(s => ({
+                subsection: s || "",
+                key: _.uniqueId("Recipe")
+            })).filter(s => s.subsection !== "")
+
+            setSubsections(subsections);
+        }
+    }, [recipe])
+
+    console.log("subsections", subsections)
 
     function toggleEditing() {
         setIsEditing(curr => !curr);
@@ -126,6 +148,10 @@ export default function Recipe() {
         setRecipe(newRecipe);
     }
 
+    function updateSubsections(newSubsections: ISubsection[]) {
+        setSubsections(newSubsections);
+    }
+
     if (isLoading) return <LoadingSpinner />
 
     return (
@@ -146,12 +172,26 @@ export default function Recipe() {
                                         <Typography variant="subtitle1">{recipe?.description}</Typography>
                                     </Grid2>
                                     <Grid2 xs={12} md={6}>
-                                        <Typography variant="h2">Ingredients</Typography>
-                                        <ul>
-                                            {recipe?.items.map(i => (
-                                                <RecipeItem key={i.order} item={i} />
+                                        <Typography variant="h2" gutterBottom>Ingredients</Typography>
+                                        {subsections.length === 0 &&
+                                            <ul>
+                                                {recipe?.items.map(i => (
+                                                    <RecipeItem key={i.order} item={i} />
+                                                ))}
+                                            </ul>
+                                        }
+                                        {subsections.length > 0 && <>
+                                            {subsections.map(s => (
+                                                <div key={s.key}>
+                                                    <Typography variant="h3">{s.subsection}</Typography>
+                                                    <ul>
+                                                        {recipe?.items.filter(i => i.subsection === s.subsection).map(i => (
+                                                            <RecipeItem key={i.order} item={i} />
+                                                        ))}
+                                                    </ul>
+                                                </div>
                                             ))}
-                                        </ul>
+                                        </>}
                                     </Grid2>
                                     <Grid2 xs={12} md={6}>
                                         <Typography variant="h2">Steps</Typography>
@@ -216,6 +256,8 @@ export default function Recipe() {
                         mode={mode}
                         recipeId={recipe?.id}
                         updateFullRecipe={updateFullRecipe}
+                        subsections={subsections}
+                        updateSubsections={updateSubsections}
                     />
                 </Container>
             }

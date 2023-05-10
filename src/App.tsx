@@ -35,6 +35,10 @@ function App() {
             },
             h2: {
                 fontSize: 30,
+            },
+            h3: {
+                fontSize: 20,
+                fontWeight: 500
             }
         },
     });
