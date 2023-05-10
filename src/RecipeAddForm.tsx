@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-import { IRecipe, IRecipeItem, IRecipeNote, IRecipeStep } from "./Recipe";
+import { IRecipe, IRecipeItem, IRecipeNote, IRecipeStep, ISubsection } from "./Recipe";
 import RecipeatsApi from "./api";
 import _ from "lodash"
 import {
@@ -16,6 +16,7 @@ import RecipeAddFormSpeedDial from "./RecipeAddFormSpeedDial";
 import AddNewIngredientDialog from "./AddNewIngredientDialog";
 import userContext from "./userContext";
 import LoadingSpinner from "./LoadingSpinner";
+import ManageSubsectionsDialog from "./ManageSubsectionsDialog";
 
 interface IRecipeEntryData {
     name: string;
@@ -57,6 +58,8 @@ interface Props {
     mode: ("add" | "edit" | "fork");
     recipeId: number | undefined;
     updateFullRecipe?: ((recipe: IRecipe) => void);
+    subsections: ISubsection[];
+    updateSubsections: (newSubsections: ISubsection[]) => void;
 }
 
 const initialData = {
@@ -93,10 +96,21 @@ const initialData = {
  * - isIngredientsLoading: whether or not ingredients list has loaded yet
  * - isAddNewIngredientOpen: boolean controlling open state of add ingredient
  *      dialog
+ * - isManageSubsectionsOpen: boolean controlling open state of manage
+ *      subsections dialog
  * 
  * Recipe -> RecipeAddForm -> RecipeAddFormSpeedDial, (AddNewIngredientDialog)
  */
-export default function RecipeAddForm({ data = initialData, toggleFormOff, toggleMode, mode, recipeId = 0, updateFullRecipe }: Props) {
+export default function RecipeAddForm({
+    data = initialData,
+    toggleFormOff,
+    toggleMode,
+    mode,
+    recipeId = 0,
+    updateFullRecipe,
+    subsections,
+    updateSubsections
+}: Props) {
     const [formData, setFormData] = useState<IRecipeEntryData>(data);
     const [meals, setMeals] = useState<IMeal[]>();
     const [isMealsLoading, setIsMealsLoading] = useState<boolean>(true);
@@ -109,6 +123,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
     );
     const [isIngredientsLoading, setIsIngredientsLoading] = useState<boolean>(true);
     const [isAddNewIngredientOpen, setIsAddNewIngredientOpen] = useState<boolean>(false);
+    const [isManageSubsectionsOpen, setIsManageSubsectionsOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const user = useContext(userContext);
@@ -194,10 +209,11 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
     }
 
     function handleNestedChange(
-        evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
     ) {
-        const { value, id } = evt.target;
-        const [list, data, idx] = id.split("-");
+        console.log(evt)
+        const { value, name } = evt.target;
+        const [list, data, idx] = name.split("-");
 
         setFormData((curr) => ({
             ...curr,
@@ -228,7 +244,8 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                     ingredient: "",
                     order: null,
                     unit: "",
-                    key: _.uniqueId(),
+                    key: _.uniqueId("RecipeAddForm"),
+                    subsection: null
                 }
             ]
         }))
@@ -244,7 +261,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                     description: "",
                     id: null,
                     order: null,
-                    key: _.uniqueId(),
+                    key: _.uniqueId("RecipeAddForm"),
                 }
             ]
         }))
@@ -259,7 +276,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                 {
                     id: null,
                     note: "",
-                    key: _.uniqueId(),
+                    key: _.uniqueId("RecipeAddForm"),
                 }
             ]
         }))
@@ -354,6 +371,10 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
 
     function toggleIsAddingNewIngredientOpen() {
         setIsAddNewIngredientOpen(curr => !curr);
+    }
+
+    function toggleIsManageSubsectionsOpen() {
+        setIsManageSubsectionsOpen(curr => !curr);
     }
 
     if (isMealsLoading || isTypesLoading ||
@@ -451,6 +472,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                         variant="standard"
                                         fullWidth
                                         id={`items-amount-${idx}`}
+                                        name={`items-amount-${idx}`}
                                         value={i.amount}
                                         onChange={handleNestedChange}
                                         size="small"
@@ -481,7 +503,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                         />}
                                     />
                                 </Grid2>
-                                <Grid2 xs={12} sm={4}>
+                                <Grid2 xs={12} sm={subsections.length ? 3 : 4}>
                                     <Autocomplete
                                         disablePortal
                                         // autoComplete
@@ -503,17 +525,44 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                         />}
                                     />
                                 </Grid2>
-                                <Grid2 xs={12} sm={4}>
+                                <Grid2 xs={12} sm={subsections.length ? 3 : 4}>
                                     <TextField
                                         label="Description"
                                         variant="standard"
                                         fullWidth
                                         id={`items-description-${idx}`}
+                                        name={`items-description-${idx}`}
                                         value={i.description?.toString()}
                                         onChange={handleNestedChange}
                                         size="small"
                                     />
                                 </Grid2>
+                                {subsections.length > 0 &&
+                                    <Grid2 xs={12} sm={2}>
+                                        <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                            <InputLabel id="type-select-label">Subsection</InputLabel>
+                                            <Select
+
+                                                labelId="subsection-select-label"
+                                                fullWidth
+                                                name={`items-subsection-${idx}`}
+                                                defaultValue=""
+                                                value={i.subsection?.toString()}
+                                                onChange={handleNestedChange}
+                                                size="small"
+                                            >
+                                                {subsections?.map(s => (
+                                                    <MenuItem
+                                                        value={s.subsection}
+                                                        key={s.subsection}
+                                                    >
+                                                        {s.subsection}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid2>
+                                }
                             </Grid2>
                             <IconButton
                                 id={`items-${i.key}`}
@@ -537,6 +586,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                 variant="standard"
                                 multiline
                                 id={`steps-description-${idx}`}
+                                name={`steps-description-${idx}`}
                                 value={s.description}
                                 onChange={handleNestedChange}
                                 required
@@ -564,6 +614,7 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                                 variant="standard"
                                 multiline
                                 id={`notes-note-${idx}`}
+                                name={`notes-note-${idx}`}
                                 value={n.note}
                                 onChange={handleNestedChange}
                                 required
@@ -593,12 +644,21 @@ export default function RecipeAddForm({ data = initialData, toggleFormOff, toggl
                 </div>
             </form >
             <div style={{ position: "fixed", bottom: 0, right: 0 }}>
-                <RecipeAddFormSpeedDial openAddIngredient={toggleIsAddingNewIngredientOpen} />
+                <RecipeAddFormSpeedDial
+                    openAddIngredient={toggleIsAddingNewIngredientOpen}
+                    openAddSubsection={toggleIsManageSubsectionsOpen}
+                />
             </div>
             <AddNewIngredientDialog
                 open={isAddNewIngredientOpen}
                 toggleClose={toggleIsAddingNewIngredientOpen}
                 addLocalIngredient={addNewIngredientToLocalList}
+            />
+            <ManageSubsectionsDialog
+                open={isManageSubsectionsOpen}
+                toggleClose={toggleIsManageSubsectionsOpen}
+                subsections={subsections}
+                updateSubsections={updateSubsections}
             />
         </div >
     )
