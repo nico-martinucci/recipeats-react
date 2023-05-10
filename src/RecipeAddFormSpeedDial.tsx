@@ -31,7 +31,7 @@ export default function RecipeAddFormSpeedDial({ openAddIngredient, openAddSubse
         },
         {
             icon: <PlaylistAddIcon />,
-            name: 'Add Subsection',
+            name: 'Manage Subsections',
             click: openAddSubsection
         }
     ];
