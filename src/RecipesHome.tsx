@@ -9,6 +9,7 @@ import RecipeatsApi from "./api";
 import userContext from "./userContext";
 import RecipesHomeSpeedDial from "./RecipesHomeSpeedDial";
 import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
+import { ISubsection } from "./Recipe";
 
 /**
  * RecipesHome: Container component for recipes, including list of recipes and
@@ -32,6 +33,7 @@ export default function RecipesHome() {
     const [recipes, setRecipes] = useState<IRecipeSummary[]>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isShowingFavorites, setIsShowingFavorites] = useState<boolean>(false);
+    const [subsections, setSubsections] = useState<ISubsection[]>([]);
 
     const user = useContext(userContext);
 
@@ -59,6 +61,10 @@ export default function RecipesHome() {
 
     function toggleIsShowingFavorites() {
         setIsShowingFavorites(curr => !curr);
+    }
+
+    function updateSubsections(newSubsections: ISubsection[]) {
+        setSubsections(newSubsections);
     }
 
     return (
@@ -90,6 +96,8 @@ export default function RecipesHome() {
                         toggleFormOff={toggleIsAddingRecipeOff}
                         mode="add"
                         recipeId={-1}
+                        subsections={subsections}
+                        updateSubsections={updateSubsections}
                     />
                 </>
             }
