@@ -8,6 +8,7 @@ import userContext from "./userContext";
 import RecipeatsApi from './api'
 import { ISignupFormData } from './SignupForm'
 import { ILoginFormData } from './LoginForm'
+import LoadingSpinner from './LoadingSpinner';
 
 
 export interface IUser {
@@ -118,7 +119,7 @@ function App() {
         localStorage.setItem("recipeatsToken", token);
     }
 
-    if (isLoading) return <h1>Loading...</h1>
+    if (isLoading) return <LoadingSpinner />
 
     return (
         <ThemeProvider theme={theme}>

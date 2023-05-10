@@ -15,6 +15,7 @@ import userContext from "./userContext";
 import UploadRecipePhotoDialog from "./UploadRecipePhotoDialog";
 import RecipeRateReviewDialog from "./RecipeRateReviewDialog";
 import UnverifiedUserSpeedDial from "./UnverifiedUserSpeedDial";
+import LoadingSpinner from "./LoadingSpinner";
 
 export interface IRecipeBasics {
     name?: string;
@@ -125,7 +126,7 @@ export default function Recipe() {
         setRecipe(newRecipe);
     }
 
-    if (isLoading) return <h1>Loading...</h1>
+    if (isLoading) return <LoadingSpinner />
 
     return (
         <>

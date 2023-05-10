@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import RecipesListItem from "./RecipesListItem";
 import { Stack, Typography } from "@mui/material";
 import userContext from "./userContext";
+import LoadingSpinner from "./LoadingSpinner";
 
 export interface IRecipeSummary {
     createdBy: string;
@@ -31,7 +32,7 @@ export default function RecipesList({ recipes, isLoading, isShowingFavorites }: 
         filteredRecipes = filteredRecipes.filter(r => user?.favoritedRecipes.has(r.id));
     }
 
-    if (isLoading) return <h1>Loading...</h1>
+    if (isLoading) return <LoadingSpinner />
 
     return (
         <div className="Recipes">
