@@ -8,6 +8,7 @@ import { SelectChangeEvent } from "@mui/material";
 import RecipeatsApi from "./api";
 import { IIngredient } from "./RecipeAddForm";
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface Props {
     open: boolean;
@@ -63,8 +64,6 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
 
         getIngredientCategories();
     }, [])
-
-    if (isCategoriesLoading) return <h1>Loading...</h1>
 
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
