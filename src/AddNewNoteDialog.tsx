@@ -9,6 +9,7 @@ import RecipeatsApi from "./api";
 import { IRecipeNote } from "./Recipe";
 import userContext from "./userContext";
 import _ from "lodash";
+import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 
 interface Props {
     recipeId: number | undefined;
@@ -25,6 +26,20 @@ const initialData = {
     note: ""
 }
 
+/**
+ * AddNewNoteDialog: dialog to add a new note to the current recipe.
+ * 
+ * Props:
+ * - recipeId: id of current recipe
+ * - open: whether or note the dialog should currently be showing
+ * - toggleClose: function to change the value of open, close the dialog
+ * - addLocalNote: function to add a posted note to the currently open recipe
+ * 
+ * State:
+ * - formData: controlled form component value state
+ * 
+ * Recipe -> AddNewNoteDialog
+ */
 export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocalNote }: Props) {
     const [formData, setFormData] = useState<INewNoteEntryData>(initialData);
 
@@ -65,6 +80,17 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
         }
     }
 
+    /**
+     * handleToggleClose: controller function to reset form data and toggle the
+     * dialog box closed.
+     */
+    function handleToggleClose() {
+        toggleClose();
+        setTimeout(() => {
+            setFormData(initialData);
+        }, FORM_CLEAR_DELAY_MSECS)
+    }
+
     return (
         <Dialog open={open} onClose={toggleClose}>
             <DialogTitle>Add New Note</DialogTitle>
@@ -90,7 +116,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={toggleClose}>Cancel</Button>
+                <Button onClick={handleToggleClose}>Cancel</Button>
                 <Button type="submit">Submit</Button>
             </DialogActions>
         </Dialog>
