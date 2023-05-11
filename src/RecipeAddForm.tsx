@@ -17,6 +17,7 @@ import AddNewIngredientDialog from "./AddNewIngredientDialog";
 import userContext from "./userContext";
 import LoadingSpinner from "./LoadingSpinner";
 import ManageSubsectionsDialog from "./ManageSubsectionsDialog";
+import snackbarContext from "./snackbarContext";
 
 interface IRecipeEntryData {
     name: string;
@@ -127,6 +128,7 @@ export default function RecipeAddForm({
 
     const navigate = useNavigate();
     const user = useContext(userContext);
+    const changeAndOpenSnackbar = useContext(snackbarContext);
 
     useEffect(function () {
         async function getFormSelectData() {
@@ -327,6 +329,11 @@ export default function RecipeAddForm({
 
         if (mode === "add" || mode === "fork") addNewRecipe();
         if (mode === "edit") submitRecipeEdits();
+
+        changeAndOpenSnackbar({
+            message: `Recipe ${mode}ed!`,
+            severity: "success"
+        })
 
         toggleFormOff();
     }
