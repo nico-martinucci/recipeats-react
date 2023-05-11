@@ -47,7 +47,7 @@ interface IUnit {
 
 export interface IIngredient {
     category: string;
-    description: string;
+    description?: string;
     name: string;
 }
 
