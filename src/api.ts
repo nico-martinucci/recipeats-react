@@ -80,7 +80,7 @@ export default class RecipeatsApi {
     static async addNewIngredient(ingredient: IIngredient) {
         let res = await this.request("ingredients/", ingredient, "post");
 
-        return res.ingredient
+        return res.ingredient ?? res;
     }
 
     static async addNoteToRecipe(noteData: IRecipeNote, recipeId: number) {
