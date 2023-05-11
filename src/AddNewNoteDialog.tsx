@@ -10,6 +10,7 @@ import { IRecipeNote } from "./Recipe";
 import userContext from "./userContext";
 import _ from "lodash";
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
+import snackbarContext from "./snackbarContext";
 
 interface Props {
     recipeId: number | undefined;
@@ -44,6 +45,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
     const [formData, setFormData] = useState<INewNoteEntryData>(initialData);
 
     const user = useContext(userContext);
+    const snackbar = useContext(snackbarContext);
 
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
@@ -69,6 +71,11 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
 
         addLocalNote(noteData);
         setFormData(initialData);
+        snackbar({
+            message: "Note added!",
+            severity: "success"
+        })
+
         toggleClose();
     }
 
@@ -117,7 +124,7 @@ export default function AddNewNoteDialog({ recipeId, open, toggleClose, addLocal
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleToggleClose}>Cancel</Button>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" onClick={handleSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
     )
