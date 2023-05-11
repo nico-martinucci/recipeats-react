@@ -93,7 +93,7 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
                 }
 
                 changeAndOpenSnackbar({
-                    message: `Ingredient added: ${ingredient.name}`,
+                    message: `Ingredient added: ${ingredient.name}.`,
                     severity: "success"
                 })
 
