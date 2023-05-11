@@ -285,10 +285,17 @@ export default function RecipeAddForm({
     function deleteDynamicFormItem(evt: React.MouseEvent) {
         const { id } = evt.currentTarget;
         const [list, key] = id.split("-")
+
         setFormData(curr => ({
             ...curr,
             // @ts-ignore FIXME: this works but throws a weird error...
-            [list]: curr[list].filter(i => i.key !== key)
+            [list]: curr[list].filter(i => {
+                if (i.id) {
+                    return i.id.toString() !== key
+                } else {
+                    return i.key !== key
+                }
+            })
         }))
     }
 
@@ -582,7 +589,7 @@ export default function RecipeAddForm({
                                 }
                             </Grid2>
                             <IconButton
-                                id={`items-${i.key}`}
+                                id={`items-${i.id ?? i.key}`}
                                 color="primary"
                                 onClick={deleteDynamicFormItem}
                                 tabIndex={-1}
@@ -609,7 +616,7 @@ export default function RecipeAddForm({
                                 required
                             />
                             <IconButton
-                                id={`steps-${s.key}`}
+                                id={`steps-${s.id ?? s.key}`}
                                 color="primary"
                                 onClick={deleteDynamicFormItem}
                                 tabIndex={-1}
@@ -637,7 +644,7 @@ export default function RecipeAddForm({
                                 required
                             />
                             <IconButton
-                                id={`notes-${n.key}`}
+                                id={`notes-${n.id ?? n.key}`}
                                 color="primary"
                                 onClick={deleteDynamicFormItem}
                                 tabIndex={-1}
