@@ -1,17 +1,14 @@
 import {
     Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText,
-    DialogTitle, Stack, FormControl, InputLabel, Select, FormControlLabel,
-    MenuItem
+    DialogTitle, Stack
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { SelectChangeEvent } from "@mui/material";
-import RecipeatsApi from "./api";
-import userContext from "./userContext";
+import { useContext, useState } from "react";
 import _ from "lodash";
 import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 import { ISubsection } from "./Recipe"
+import userContext from "./userContext";
 
 
 interface Props {
@@ -28,32 +25,27 @@ interface ISubsectionEntryData {
     subsections: ISubsection[];
 }
 
-// const initialData = {
-//     subsections: []
-// }
-
-const sampleSubsections = [
-    {
-        key: "6",
-        subsection: "Filling"
-    },
-    {
-        key: "7",
-        subsection: "Cake"
-    },
-    {
-        key: "8",
-        subsection: "Frosting"
-    }
-]
-
 /**
+ * ManageSubsectionsDialog: recipe form dialog to manage ingredient subsections.
  * 
+ * Props:
+ * - open: whether or not the dialog box is open
+ * - toggleClose: function to toggle the open state
+ * - subsections: current subsections for the current recipe
+ * - updateSubsections: function to change the current subsections available
+ *      in the dropdown menu
+ * - removeDeletedSubsectionsFromItems: function to remove an deleted/changed
+ *      subsections that are currently in use
+ * 
+ * State:
+ * - formData: controlled from component value state
+ * 
+ * RecipeAddForm -> ManageSubsectionsDialog
  */
 export default function ManageSubsectionsDialog({
     open,
     toggleClose,
-    subsections = sampleSubsections,
+    subsections,
     updateSubsections,
     removeDeletedSubsectionsFromItems
 }: Props) {
