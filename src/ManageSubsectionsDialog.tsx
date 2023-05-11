@@ -8,7 +8,7 @@ import { IconButton } from "@mui/material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 import { ISubsection } from "./Recipe"
-import userContext from "./userContext";
+import snackbarContext from "./snackbarContext";
 
 
 interface Props {
@@ -51,7 +51,7 @@ export default function ManageSubsectionsDialog({
 }: Props) {
     const [formData, setFormData] = useState<ISubsectionEntryData>({ subsections });
 
-    const user = useContext(userContext);
+    const changeAndOpenSnackbar = useContext(snackbarContext);
 
     function handleNestedChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -102,6 +102,10 @@ export default function ManageSubsectionsDialog({
     function handleSubmit() {
         updateSubsections(formData.subsections);
         removeDeletedSubsectionsFromItems(formData.subsections);
+        changeAndOpenSnackbar({
+            message: "Subsections updated!",
+            severity: "success"
+        })
         toggleClose();
     }
 
