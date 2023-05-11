@@ -60,7 +60,7 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [submitEvent, setSubmitEvent] = useState<boolean>(true);
 
-    const changeAndOpenSnackbar = useContext(snackbarContext);
+    const snackbar = useContext(snackbarContext);
 
     useEffect(function () {
         async function getIngredientCategories() {
@@ -85,14 +85,14 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
                 setIsSubmitting(false);
 
                 if ("error" in ingredient) {
-                    changeAndOpenSnackbar({
+                    snackbar({
                         message: ingredient.error,
                         severity: "error"
                     })
                     return;
                 }
 
-                changeAndOpenSnackbar({
+                snackbar({
                     message: `Ingredient added: ${ingredient.name}.`,
                     severity: "success"
                 })

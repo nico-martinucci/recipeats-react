@@ -51,7 +51,7 @@ export default function ManageSubsectionsDialog({
 }: Props) {
     const [formData, setFormData] = useState<ISubsectionEntryData>({ subsections });
 
-    const changeAndOpenSnackbar = useContext(snackbarContext);
+    const snackbar = useContext(snackbarContext);
 
     function handleNestedChange(
         evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -102,7 +102,7 @@ export default function ManageSubsectionsDialog({
     function handleSubmit() {
         updateSubsections(formData.subsections);
         removeDeletedSubsectionsFromItems(formData.subsections);
-        changeAndOpenSnackbar({
+        snackbar({
             message: "Subsections updated!",
             severity: "success"
         })
