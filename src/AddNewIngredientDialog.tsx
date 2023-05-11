@@ -9,6 +9,7 @@ import RecipeatsApi from "./api";
 import { IIngredient } from "./RecipeAddForm";
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 import LoadingSpinner from "./LoadingSpinner";
+import Typography from "@mui/material";
 
 interface Props {
     open: boolean;
@@ -54,6 +55,9 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
     const [formData, setFormData] = useState<INewIngredientEntryData>(initialData);
     const [categories, setCategories] = useState<ICategory[]>();
     const [isCategoriesLoading, setIsCategoriesLoading] = useState<boolean>(true);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+    const [submitEvent, setSubmitEvent] = useState<boolean>(true);
 
     useEffect(function () {
         async function getIngredientCategories() {
@@ -64,6 +68,34 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
 
         getIngredientCategories();
     }, [])
+
+    useEffect(function () {
+        if (isMounted) {
+            setIsSubmitting(true);
+            async function postAddNewIngredient() {
+                const ingredient = await RecipeatsApi.addNewIngredient(formData);
+
+                setTimeout(() => {
+
+                }, 1000)
+
+                setIsSubmitting(false);
+
+                if ("error" in ingredient) {
+                    console.log("error:", ingredient.error);
+                    return;
+                }
+
+                addLocalIngredient(ingredient);
+                setFormData(initialData);
+                toggleClose();
+            }
+
+            postAddNewIngredient();
+        } else {
+            setIsMounted(true);
+        }
+    }, [submitEvent])
 
     function handleChange(
         evt: (SelectChangeEvent | React.ChangeEvent<HTMLInputElement |
@@ -79,10 +111,7 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
 
     async function handleSubmit() {
         event?.preventDefault();
-        const ingredient = await RecipeatsApi.addNewIngredient(formData);
-        addLocalIngredient(ingredient);
-        setFormData(initialData);
-        toggleClose();
+        setSubmitEvent(curr => !curr);
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -108,55 +137,60 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
         <Dialog open={open} onClose={handleToggleClose}>
             <DialogTitle>Add New Ingredient</DialogTitle>
             <form onSubmit={handleSubmit}>
-                <DialogContent>
-                    <DialogContentText>
-                        Please fill out the information below to add a new
-                        ingredient to the database.
-                    </DialogContentText>
-                    <Stack gap={2} sx={{ mb: 4 }}>
-                        <TextField
-                            sx={{ minWidth: "100%" }}
-                            label="Ingredient"
-                            variant="standard"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            onKeyDown={handleKeyDown}
-                            required
-                        />
-                        <TextField
-                            sx={{ minWidth: "100%" }}
-                            label="Description"
-                            variant="standard"
-                            multiline
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <FormControl variant="standard" sx={{ minWidth: "100%" }}>
-                            <InputLabel id="category-select-label">Category</InputLabel>
-                            <Select
-                                labelId="category-select-label"
-                                id="category"
-                                name="category"
-                                defaultValue=""
-                                value={formData.category}
+                {(isCategoriesLoading || isSubmitting) &&
+                    <DialogContent>
+                        <LoadingSpinner />
+                    </DialogContent>}
+                {(!isCategoriesLoading && !isSubmitting) &&
+                    <DialogContent>
+                        <DialogContentText>
+                            Please fill out the information below to add a new
+                            ingredient to the database.
+                        </DialogContentText>
+                        <Stack gap={2} sx={{ mb: 4 }}>
+                            <TextField
+                                sx={{ minWidth: "100%" }}
+                                label="Ingredient"
+                                variant="standard"
+                                id="name"
+                                name="name"
+                                value={formData.name}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
                                 required
-                            >
-                                {categories?.map(c => (
-                                    <MenuItem value={c.name} key={c.name}>
-                                        {c.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Stack>
-                </DialogContent>
+                            />
+                            <TextField
+                                sx={{ minWidth: "100%" }}
+                                label="Description"
+                                variant="standard"
+                                multiline
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="category-select-label">Category</InputLabel>
+                                <Select
+                                    labelId="category-select-label"
+                                    id="category"
+                                    name="category"
+                                    defaultValue=""
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    onKeyDown={handleKeyDown}
+                                    required
+                                >
+                                    {categories?.map(c => (
+                                        <MenuItem value={c.name} key={c.name}>
+                                            {c.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Stack>
+                    </DialogContent>}
                 <DialogActions>
                     <Button onClick={handleToggleClose}>Cancel</Button>
                     <Button type="submit">Submit</Button>
