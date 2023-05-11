@@ -132,13 +132,13 @@ function App() {
         localStorage.setItem("recipeatsToken", token);
     }
 
-    function toggleSnackbarOpen() {
-        setIsSnackbarOpen(true);
+    function toggleSnackbarOpen(isOpen: boolean) {
+        setIsSnackbarOpen(isOpen);
     }
 
     function changeAndOpenSnackbar(content: ISnackbarContent) {
         setSnackbardContent(content);
-        toggleSnackbarOpen();
+        toggleSnackbarOpen(true);
     }
 
     if (isLoading) return <LoadingSpinner />
@@ -151,7 +151,11 @@ function App() {
                     <BrowserRouter>
                         <Navbar logout={logout} />
                         <RoutesList signup={signup} login={login} setLocalStorageToken={setLocalStorageToken} />
-                        <GlobalSnackbar open={isSnackbarOpen} handleClose={() => { }} />
+                        <GlobalSnackbar
+                            open={isSnackbarOpen}
+                            toggleSnackbarOpen={toggleSnackbarOpen}
+                            content={snackbarContent}
+                        />
                     </BrowserRouter>
                 </snackbarContext.Provider>
             </userContext.Provider>
