@@ -10,6 +10,7 @@ import { IRecipeNote } from "./Recipe";
 import userContext from "./userContext";
 import _ from "lodash";
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import snackbarContext from "./snackbarContext";
 
 interface Props {
     recipeId: number;
@@ -40,6 +41,7 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
     const [submitEvent, setSubmitEvent] = useState<boolean>(true);
 
     const user = useContext(userContext);
+    const snackbar = useContext(snackbarContext);
 
     useEffect(function () {
         if (isMounted) {
@@ -64,6 +66,8 @@ export default function UploadRecipePhotoDialog({ recipeId, open, toggleClose, u
                 if (formData.makeCover) {
                     updatePhoto(newPhoto.photoUrl)
                 }
+
+                snackbar({ message: "Photo uploaded!", severity: "success" });
 
                 handleToggleClose();
             }

@@ -5,10 +5,12 @@ import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import RoutesList from './RoutesList'
 import Navbar from './Navbar'
 import userContext from "./userContext";
+import snackbarContext from './snackbarContext';
 import RecipeatsApi from './api'
 import { ISignupFormData } from './SignupForm'
 import { ILoginFormData } from './LoginForm'
 import LoadingSpinner from './LoadingSpinner';
+import GlobalSnackbar from './GlobalSnackbar';
 
 
 export interface IUser {
@@ -22,10 +24,17 @@ export interface IUser {
     updateFavorites: (recipeId: number) => void;
 }
 
+export interface ISnackbarContent {
+    severity: "error" | "warning" | "info" | "success";
+    message: string;
+}
+
 function App() {
     const [user, setUser] = useState<IUser>();
     const [token, setToken] = useState<string>(localStorage.getItem("recipeatsToken") || "");
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+    const [snackbarContent, setSnackbardContent] = useState<ISnackbarContent>();
 
     const theme = createTheme({
         typography: {
@@ -123,16 +132,32 @@ function App() {
         localStorage.setItem("recipeatsToken", token);
     }
 
+    function toggleSnackbarOpen(isOpen: boolean) {
+        setIsSnackbarOpen(isOpen);
+    }
+
+    function changeAndOpenSnackbar(content: ISnackbarContent) {
+        setSnackbardContent(content);
+        toggleSnackbarOpen(true);
+    }
+
     if (isLoading) return <LoadingSpinner />
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <userContext.Provider value={user}>
-                <BrowserRouter>
-                    <Navbar logout={logout} />
-                    <RoutesList signup={signup} login={login} setLocalStorageToken={setLocalStorageToken} />
-                </BrowserRouter>
+                <snackbarContext.Provider value={changeAndOpenSnackbar}>
+                    <BrowserRouter>
+                        <Navbar logout={logout} />
+                        <RoutesList signup={signup} login={login} setLocalStorageToken={setLocalStorageToken} />
+                        <GlobalSnackbar
+                            open={isSnackbarOpen}
+                            toggleSnackbarOpen={toggleSnackbarOpen}
+                            content={snackbarContent}
+                        />
+                    </BrowserRouter>
+                </snackbarContext.Provider>
             </userContext.Provider>
         </ThemeProvider >
     )

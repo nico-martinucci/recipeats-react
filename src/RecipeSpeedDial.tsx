@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
+import { SpeedDial, SpeedDialIcon, SpeedDialAction, snackbarClasses } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
@@ -12,6 +12,7 @@ import RecipeatsApi from "./api";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
+import snackbarContext from "./snackbarContext";
 
 interface Props {
     recipeAuthor: string | undefined;
@@ -54,6 +55,7 @@ export default function RecipeSpeedDial({
     const [updateIcons, setUpdateIcons] = useState<boolean>(false);
 
     const user = useContext(userContext);
+    const snackbar = useContext(snackbarContext);
 
     const generalActions = [
         {
@@ -97,6 +99,7 @@ export default function RecipeSpeedDial({
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     async function handleFavoriteClick() {
+        let message = "";
         if (!user?.favoritedRecipes.has(recipeId || -1)) {
             let newFavorite = await RecipeatsApi.favoriteRecipe(
                 user?.username,
@@ -104,6 +107,8 @@ export default function RecipeSpeedDial({
             );
 
             user?.updateFavorites(recipeId);
+
+            message = "Recipe favorited!"
         } else {
             let deletedFavorite = await RecipeatsApi.unfavoriteRecipe(
                 user?.username,
@@ -111,7 +116,11 @@ export default function RecipeSpeedDial({
             );
 
             user?.updateFavorites(recipeId);
+
+            message = "Recipe unfavorited!"
         }
+
+        snackbar({ message, severity: "info" })
 
         setUpdateIcons(curr => !curr);
     }
