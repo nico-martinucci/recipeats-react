@@ -3,13 +3,14 @@ import {
     DialogTitle, Stack, FormControl, InputLabel, Select, FormControlLabel,
     MenuItem
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
 import RecipeatsApi from "./api";
 import { IIngredient } from "./RecipeAddForm";
 import { FORM_CLEAR_DELAY_MSECS } from "./globalVariables";
 import LoadingSpinner from "./LoadingSpinner";
 import Typography from "@mui/material";
+import snackbarContext from "./snackbarContext";
 
 interface Props {
     open: boolean;
@@ -59,6 +60,8 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [submitEvent, setSubmitEvent] = useState<boolean>(true);
 
+    const changeAndOpenSnackbar = useContext(snackbarContext);
+
     useEffect(function () {
         async function getIngredientCategories() {
             let categories = await RecipeatsApi.getIngredientCategories();
@@ -82,9 +85,17 @@ export default function AddNewIngredientDialog({ open, toggleClose, addLocalIngr
                 setIsSubmitting(false);
 
                 if ("error" in ingredient) {
-                    console.log("error:", ingredient.error);
+                    changeAndOpenSnackbar({
+                        message: ingredient.error,
+                        severity: "error"
+                    })
                     return;
                 }
+
+                changeAndOpenSnackbar({
+                    message: `Ingredient added: ${ingredient.name}`,
+                    severity: "success"
+                })
 
                 addLocalIngredient(ingredient);
                 setFormData(initialData);
